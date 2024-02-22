@@ -1,0 +1,44 @@
+﻿
+
+
+
+
+<div id="DeattacheAssetWarrantyPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+        <form asp-area="Admin" asp-page="/AssetManagment/AssetProfile" asp-page-handler="DeattachAssetWarranty" asp-route-AssetId="@Model" enctype="multipart/form-data">
+            <div class="modal-content bd-0 tx-14">
+                <div class="modal-header pd-y-20 pd-x-25">
+                    @*<h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="AssetDescriptiontxt"></h6>*@
+                    <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-25">
+
+                    <input id="AssetWarrantyIdFaild" name="WarrantyId" hidden />
+                    <div class="row mg-b-10">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["Lenght"] <span class="tx-danger"></span></label>
+                            <input id="WarrantylenghtFaild" class="form-control" readonly>
+                        </div>
+                    </div><!-- row -->
+                    <div class="row mg-b-25">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["Expiration Date"] <span class="tx-danger"></span></label>
+                            <input id="WarrantyExpirationDate" class="form-control" readonly>
+                        </div>
+
+                    </div><!-- row -->
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">@sharedResource["Confirm"]</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@sharedResource["Close"]</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- modal-dialog -->
+</div>

@@ -1,0 +1,15 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.ReportsManagement.MergeTwoReportModel
+@{
+}
+        <input value=@Model.CheckInParam id="Param1" hidden />
+        <input id="Param2" value=@Model.CheckOutParam hidden />
+<script>
+ document.addEventListener("DOMContentLoaded", function() {
+    var originValue= window.origin;
+    var checkIn= document.getElementById("Param1").value;
+    var checkOut=document.getElementById("Param2").value;
+    window.location.replace(originValue+'/Admin/ReportsManagement/CheckInFormRPT?AssetMovement='+checkIn);
+    window.open(originValue+'/Admin/ReportsManagement/CheckoutFormRPT?AssetMovement='+checkOut, '_blank');
+  });
+</script>

@@ -1,0 +1,89 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AssetLeasingManagement.AddAssetLeasingModel
+@{
+}
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["SETUP"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["AddBrand"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Asset Leasing Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+            @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
+
+            <div class="form-layout">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Lease Begins"] <span class="tx-danger">*</span></label>
+                                <input asp-for="AssetLeasing.StartDate" type="date" class="form-control">
+                                <span asp-validation-for="AssetLeasing.StartDate" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+
+                    <div class="form-group">
+                        <label class="form-control-label">@sharedResource["Leasing Customer"] <span class="tx-danger">*</span></label>
+                        <div class="row mg-b-25">
+                            @(Html.DevExtreme().LookupFor(c=>c.AssetLeasing.CustomerId)
+            .DataSource(d => d.WebApi()
+                .Controller("Lookups")
+                .LoadAction("CustomersLookup")
+                .Key("Value")
+            )
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+            .ShowClearButton(true)
+        )
+                            <span asp-validation-for="AssetLeasing.CustomerId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Lease Expires"]  <span class="tx-danger">*</span></label>
+                                <input asp-for="AssetLeasing.EndDate" type="date" class="form-control">
+                                <span asp-validation-for="AssetLeasing.EndDate" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+
+
+
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"> @sharedResource["Notes"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="AssetLeasing.StartDate" type="date" class="form-control" placeholder="@sharedResource["Enter your Notes"]">
+                                <span asp-validation-for="AssetLeasing.StartDate" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                    </div><!-- row -->
+
+
+                    <div class="form-layout-footer">
+                        <button class="btn btn-primary bd-0">@sharedResource["create lease"]</button>
+                        <a asp-area="Admin" asp-page="/AssetLeasingManagement/LeasingList">
+                            <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Cancel"]' />
+                        </a>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

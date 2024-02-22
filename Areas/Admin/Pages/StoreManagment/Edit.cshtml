@@ -1,0 +1,102 @@
+﻿
+@page
+
+@model AssetProject.Areas.Admin.Pages.StoreManagment.EditModel
+@{
+}
+
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Inventory"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Edit Store"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Store Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+            <label class="section-title">@sharedResource["Please fill Store information"]</label>
+            @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
+
+            <div class="form-layout">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Store Title"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.StoreTitle" class="form-control" value="@Model.Store.StoreTitle" placeholder="@sharedResource["Enter Store Title"]">
+                                <span asp-validation-for="Store.StoreTitle" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Store Address"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.Address" class="form-control" value="@Model.Store.Address" placeholder="@sharedResource["Enter Store Address"]">
+                                <span asp-validation-for="Store.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Telephone Number"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.Tele" class="form-control" value="@Model.Store.Tele" placeholder="@sharedResource["Enter Telephone Number"]">
+                                <span asp-validation-for="Store.Tele" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"> @sharedResource["Mobile Number"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.Mobile" class="form-control" value="@Model.Store.Mobile" placeholder="@sharedResource["Enter Mobile Number"]">
+
+                            </div>
+                        </div><!-- col-4 -->
+
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Fax"] : <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.Fax" value="@Model.Store.Fax" class="form-control" placeholder="@sharedResource["Enter Fax"]">
+                            </div>
+                        </div>
+                    </div>
+                    <input asp-for="Store.StoreId" class="form-control" hidden>
+                    <input asp-for="Store.TenantId" class="form-control" hidden>
+
+
+                    <div class="form-layout-footer">
+                        <button class="btn btn-primary bd-0" type="submit">@sharedResource["Edit Store"] </button>
+                        <a asp-area="Admin" asp-page="/StoreManagment/list">
+                            <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Cancel"]' />
+                        </a>
+                    </div><!-- form-layout-footer -->
+                </form>
+
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+ $(function(){
+    var date = new Date().toISOString().slice(0,10);
+
+//To restrict past date
+
+$('.date').attr('min', date);
+
+
+});
+    </script>
+}

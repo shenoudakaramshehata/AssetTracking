@@ -1,0 +1,87 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.ContractManagment.DeleteContractModel
+@{
+}
+
+
+<div class="slim-mainpanel">
+      <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["SETUP"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Delete Contract"]</li>
+            </ol>
+          <h6 class="slim-pagetitle">@sharedResource["Contract Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+ <div class="section-wrapper">
+         @* <label class="section-title">Please fill your company information</label>*@
+          @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
+
+          <div class="form-layout">  
+            <div class="row mg-b-25">
+              <div class="col-lg-4">
+                  <label class="form-control-label">@sharedResource["Contact Title"]: <span class="tx-danger">*</span></label>
+                  <div style="font-size:xx-large">@Model.Contract.Title</div>
+              </div><!-- col-4 -->
+
+              <div class="col-lg-4">
+                  <label class="form-control-label">@sharedResource["Description"]: <span class="tx-danger">*</span></label>
+                  <div style="font-size:xx-large">@Model.Contract.Description</div>
+              </div><!-- col-4 -->
+
+            
+                 <div class="col-lg-4">
+                     <label class="form-control-label">@sharedResource["Contract No"]: <span class="tx-danger">*</span></label>
+                  <div style="font-size:xx-large">@Model.Contract.ContractNo</div>
+              </div><!-- col-4 -->
+             
+
+                 <div class="col-lg-4">
+                     <label class="form-control-label">@sharedResource["Cost"]: <span class="tx-danger">*</span></label>
+                  <div style="font-size:xx-large">@Model.Contract.Cost</div>
+              </div><!-- col-4 -->
+
+                 <div class="col-lg-4">
+                     <label class="form-control-label">@sharedResource["Start Date"]: <span class="tx-danger">*</span></label>
+                  <div style="font-size:xx-large">@Model.Contract.StartDate.ToShortDateString()</div>
+              </div><!-- col-4 -->
+
+               
+                 <div class="col-lg-4">
+                     <label class="form-control-label">@sharedResource["End Date"]: <span class="tx-danger">*</span></label>
+                  <div style="font-size:xx-large">@Model.Contract.EndDate.ToShortDateString()</div>
+              </div><!-- col-4 -->
+   
+                 <div class="col-lg-4">
+                     <label class="form-control-label">@sharedResource["Vendor"]: <span class="tx-danger">*</span></label>
+                  <div style="font-size:xx-large">@Model.VendorName</div>
+              </div><!-- col-4 -->
+
+         
+            </div><!-- row -->
+
+            <div class="form-layout-footer">
+                 <form method="post" asp-route-id="@Model.Contract.ContractId" >
+                   <input type="submit" value='@sharedResource["Delete"]' class="btn btn-danger bd-0"  >
+                      <a  asp-area="Admin" asp-page="/ContractManagment/ContractList">
+                 <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Cancel"]' />
+              </a>
+                  </form>
+            
+            </div><!-- form-layout-footer -->
+       
+          </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        
+      </div><!-- container -->
+    </div>
+
+    
+@section Scripts {
+ <script>
+
+ 
+    </script>
+}

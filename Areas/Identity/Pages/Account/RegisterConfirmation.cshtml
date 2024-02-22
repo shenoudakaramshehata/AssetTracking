@@ -1,0 +1,38 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register confirmation";
+     Layout = "~/Pages/Shared/Admin/_AdminLayoutSlimEmpty.cshtml";
+}
+
+@*<h1>@ViewData["Title"]</h1>*@
+<div class="d-md-flex flex-row-reverse">
+<div class="signin-right">
+        <div class="signin-box">
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+            <p>
+                @sharedResource["doesnt have account"] <a href="https://aka.ms/aspaccountconf">@sharedResource["these docs"]</a>@sharedResource["configure"]: 
+                <a id="confirm-link" href="@Model.EmailConfirmationUrl">@sharedResource["clickconfirm"]</a>
+            </p>
+    }
+    else
+    {
+        <p>
+            @sharedResource["checkconfirm"].
+        </p>
+    }
+}
+</div>
+</div>
+<div class="signin-left">
+    <div class="signin-box">
+        <h2 class="slim-logo"><a href="index.html">slim<span>.</span></a></h2>
+
+        <p>@sharedResource["slim paragraph"].</p>
+
+        <p class="tx-12">&copy; @sharedResource["Copyright 2022. All Rights Reserved"].</p>
+    </div>
+</div>
+      </div>

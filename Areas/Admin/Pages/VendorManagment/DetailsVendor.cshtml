@@ -1,0 +1,83 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.VendorManagment.DetailsVendorModel
+@{
+}
+
+
+<div class="slim-mainpanel">
+      <div class="container">
+        <div class="slim-pageheader">
+          <ol class="breadcrumb slim-breadcrumb">
+            <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="#">@sharedResource["Assets"]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@sharedResource["Vendor Details"]</li>
+          </ol>
+          <h6 class="slim-pagetitle">@sharedResource["Vendor Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+ <div class="section-wrapper">
+         @* <label class="section-title">Please fill your company information</label>*@
+          @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
+
+     <div class="form-layout">
+         <div class="row mg-b-25">
+             <div class="col-lg-4">
+                 <label class="form-control-label">@sharedResource["Vendor Title"]: <span class="tx-danger">*</span></label>
+                 <div style="font-size:large">@Model.Vendor.VendorTitle</div>
+             </div><!-- col-4 -->
+
+             <div class="col-lg-4">
+                 <label class="form-control-label">@sharedResource["Vendor Phone"]: <span class="tx-danger">*</span></label>
+                 <div style="font-size:large">@Model.Vendor.Phone</div>
+             </div><!-- col-4 -->
+
+
+             <div class="col-lg-4">
+                 <label class="form-control-label">@sharedResource["Mobile Number"] : <span class="tx-danger">*</span></label>
+                 <div style="font-size:large">@Model.Vendor.Mobile</div>
+             </div><!-- col-4 -->
+         </div>
+         <div class="row mg-b-25">
+             <div class="col-lg-4">
+                 <label class="form-control-label">@sharedResource["Vendor WebSite"]: <span class="tx-danger">*</span></label>
+                 <div style="font-size:large">@Model.Vendor.Website</div>
+             </div><!-- col-4 -->
+
+             <div class="col-lg-4">
+                 <label class="form-control-label">@sharedResource["Contact Personal Name"]: <span class="tx-danger">*</span></label>
+                 <div style="font-size:large">@Model.Vendor.ContactPersonName</div>
+             </div><!-- col-4 -->
+
+
+             <div class="col-lg-4">
+                 <label class="form-control-label">@sharedResource["Contact Personal Email"]: <span class="tx-danger">*</span></label>
+                 <div style="font-size:large">@Model.Vendor.ContactPersonEmail</div>
+             </div><!-- col-4 -->
+         </div>
+         <div class="row mg-b-25">
+
+             <div class="col-lg-4">
+                 <label class="form-control-label">@sharedResource["Contact Personal Phone"]: <span class="tx-danger">*</span></label>
+                 <div style="font-size:large">@Model.Vendor.ContactPersonPhone</div>
+             </div><!-- col-4 -->
+         </div><!-- row -->
+
+         <div class="form-layout-footer">
+             <a asp-area="Admin" asp-page="/VendorManagment/VendorList">
+                 <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Back to List"]' />
+             </a>
+         </div><!-- form-layout-footer -->
+
+     </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+        
+      </div><!-- container -->
+    </div>
+
+    
+@section Scripts {
+ <script>
+
+ 
+    </script>
+}

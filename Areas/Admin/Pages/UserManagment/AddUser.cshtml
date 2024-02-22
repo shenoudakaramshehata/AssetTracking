@@ -1,0 +1,87 @@
+﻿@page
+@model AssetProject.Areas.Identity.Pages.UserManagment.AddUserModel
+@{
+    ViewData["Title"] = "Register";
+     Layout = "~/Pages/Shared/Admin/_AdminLayoutSlimEmpty.cshtml";
+}
+
+<div class="d-md-flex flex-row-reverse">
+    <div class="signin-right">
+             <div class="signin-box signup">
+                 <form method="post">
+                     <h3 class="signin-title-primary">@sharedResource["GetStarted"]</h3>
+                     <h5 class="signin-title-secondary lh-4">@sharedResource["IFTSOTM"]</h5>
+                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                     <div class="form-group">
+
+                         <input asp-for="Input.FirstName" class="form-control" placeholder="@sharedResource["FirstName"]" />
+                         <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                     </div>
+                     <div class="form-group">
+
+                         <input asp-for="Input.LastName" class="form-control" placeholder="@sharedResource["LastName"]" />
+                         <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                     </div>
+
+                     <div class="form-group">
+
+                         <input asp-for="Input.Email" class="form-control" placeholder="@sharedResource["Email"]" />
+                         <span asp-validation-for="Input.Email" class="text-danger"></span>
+                     </div>
+
+
+                     <div class="form-group">
+
+                         <input asp-for="Input.Phone" class="form-control" placeholder="@sharedResource["PhoneNumber"]" />
+                         <span asp-validation-for="Input.Phone" class="text-danger"></span>
+                     </div>
+
+
+                     <div class="form-group">
+
+                         <input asp-for="Input.Password" class="form-control" placeholder="@sharedResource["Password"]" />
+                         <span asp-validation-for="Input.Password" class="text-danger"></span>
+                     </div>
+
+
+                     <div class="form-group">
+
+                         <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="@sharedResource["ConfirmPassword"]" />
+                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                     </div>
+
+
+
+                     <button class="btn btn-primary btn-block btn-signin">@sharedResource["SignUp"]</button>
+
+
+                 </form>
+          <div class="signup-separator"><span>@sharedResource["OrSignupUsing"]</span></div>
+
+          @*<button class="btn btn-facebook btn-block">@sharedResource["SignUpUsingFacebook"]</button>
+          <button class="btn btn-twitter btn-block">@sharedResource["SignUpUsingTwitter"]</button>*@
+
+          <p class="mg-t-40 mg-b-0">@sharedResource["AlreadyHaveAnaccount"] <a asp-area="Identity" asp-page="/Account/Login">@sharedResource["SignIn"]</a></p>
+    </div>
+    </div>
+     <div class="signin-left">
+         <div class="signin-box">
+             <h2 class="slim-logo"><a href="index.html">slim<span>.</span></a></h2>
+
+             <p>
+                 @sharedResource["slim paragraph"]
+         </p>
+         <p>@sharedResource["Browse our site and see for yourself why you need Slim"].</p>
+
+           <p><a href="#" class="btn btn-outline-secondary pd-x-25">@sharedResource["Read More"]</a></p>
+
+         <p class="tx-12">&copy; @sharedResource["Copyright 2022. All Rights Reserved"].</p>
+         </div>
+      </div><!-- signin-left -->
+  
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

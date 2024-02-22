@@ -1,0 +1,50 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+
+@(Html.DevExtreme().DataGrid<AssetProject.Models.Department>()
+    .DataSource(ds => ds.Mvc()
+        .Controller("Departments")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("DepartmentId")
+    )
+    .RemoteOperations(true)
+   
+  .Editing(e => e.Mode(GridEditMode.Popup)
+            .AllowUpdating(true)
+            .AllowAdding(true)
+            .AllowDeleting(true)
+            .Popup(p => p
+                .Title("Employee Info")
+                .ShowTitle(true)
+                .Width(700)
+                .Height(525)
+            ))
+    .ShowBorders(true)
+    .Paging(p=>p.PageSize(10))
+    .Pager(p=>p.ShowPageSizeSelector(true).AllowedPageSizes(new [] {10,20,40,80}))
+    .SearchPanel(s=>s.Visible(true).HighlightCaseSensitive(true))
+    .GroupPanel(g=>g.Visible(true))
+    .Grouping(g=>g.AutoExpandAll(false))
+    .FilterRow(filterRow => filterRow
+        .Visible(true)
+        .ApplyFilter(GridApplyFilterMode.Auto)
+    )
+      .HeaderFilter(headerFilter => headerFilter.Visible(true))
+    .Columns(columns => {
+
+     @*   columns.AddFor(m => m.DepartmentId);*@
+
+        columns.AddFor(m => m.DepartmentTitle);
+    })
+ 
+   
+)

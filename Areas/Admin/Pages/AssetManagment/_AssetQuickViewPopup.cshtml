@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div id="AssetQuickViewPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="assettagid"></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body pd-25">
+                <div class="row row-sm">
+                    <div class="col-lg-12">
+                        <div class="card card-profile">
+                            <div class="card-body">
+                                <div class="media">
+                                    <img src="" id="img" alt="" style="border-radius:0">
+                                    <div class="media-body">
+                                        <h3 class="card-profile-name">@sharedResource["Asset Description"]</h3>
+                                        <p class="card-profile-position"> @sharedResource["AssetTagId"]  <a href="" id="AssetTagId"></a></p>
+                                        <p>@sharedResource["Serial"]<a href="" id="AssetSerial"></a></p>
+                                        <div class="row mg-t-20">
+                                            <div class="col-md">
+                                                <label class="section-label-sm tx-gray-500">@sharedResource["General Information"]</label>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Description"]</span>
+                                                    <span id="AssetDescription"></span>
+                                                </p>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Asset Cost"]</span>
+                                                    <span id="AssetCost"></span>
+                                                </p>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Asset PurchaseDate"]:</span>
+                                                    <span id="AssetPurchaseDate"></span>
+                                                </p>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Item"]:</span>
+                                                    <span id="AssetItem"></span>
+                                                </p>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Purchase Number"]:</span>
+                                                    <span id="Assetpurchasenumber"></span>
+                                                </p>
+
+                                            </div><!-- col -->
+                                            <div class="col-md" id="DepreciationInfo">
+                                                <label class="section-label-sm tx-gray-500">@sharedResource["Depreciation Information"]</label>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Depreciable Cost"]</span>
+                                                    <span id="DepreciableCost"></span>
+                                                </p>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Salvage Value"]</span>
+                                                    <span id="SalvageValue"></span>
+                                                </p>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Asset Life"]:</span>
+                                                    <span id="AssetLife"></span>
+                                                </p>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Date Acquired"]:</span>
+                                                    <span id="DateAcquired"></span>
+                                                </p>
+                                                <p class="invoice-info-row">
+                                                    <span>@sharedResource["Depreciation Method"]:</span>
+                                                    <span id="DepreciationMethod"></span>
+                                                </p>
+                                            </div><!-- col -->
+                                        </div>
+                                    </div><!-- media-body -->
+                                </div><!-- media -->
+                            </div><!-- card-body -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">@sharedResource["Cancel"]</button>
+                        </div>
+                    </div>
+                </div><!-- modal-dialog -->
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,157 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="table-wrapper">
+            <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                <label class="section-title d-inline">@sharedResource["Warranties"]</label>
+                <a href="javascript:void(0)" onclick="ShowAssetWarantyPopup('<%- data.AssetId %>')" class="btn btn-primary" style="float:right">@sharedResource["Add Warranty"]  </a>
+            </div><!-- slim-pageheader -->
+            <br />
+            <br />
+            @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetWarranty>()
+.ID("gridWarrantyContainer")
+.DataSource(ds => ds.Mvc()
+.Controller("AssetWarranties")
+.LoadAction("Get")
+//.InsertAction("Post")
+.LoadParams(new { AssetId = Model})
+//.UpdateAction("Put")
+.DeleteAction("Delete")
+.Key("WarrantyId")
+)
+
+.RemoteOperations(true)
+ .ShowBorders(true)
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 40, 80 }))
+    .FilterRow(filterRow => filterRow
+        .Visible(true)
+        .ApplyFilter(GridApplyFilterMode.Auto)
+    )
+      .HeaderFilter(headerFilter => headerFilter.Visible(true))
+.Columns(columns =>
+{
+columns.AddFor(m => m.ExpirationDate).Caption(sharedResource["Expiration Date"]);
+columns.AddFor(m => m.Length).Caption(sharedResource["Length"]);
+columns.AddFor(m => m.Notes).Caption(sharedResource["Notes"]);
+
+columns.Add().Width(160).Alignment(HorizontalAlignment.Center)
+.CellTemplate(@<text>
+
+     @Html.DevExtreme().Button().Text(sharedResource["Detach"]).OnClick("function (e) { DeattachWarrantyButtonClick(data)}")
+  </text>);
+    })
+        )
+        </div>
+        </div>
+    </div>
+            <partial name="_DetachAssetWarranty" />
+            <div class="slim-mainpanel">
+                <div class="container">
+                    <div class="table-wrapper">
+                        <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                            <div id="AssetWarrantyPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+                                    <form asp-area="Admin" asp-page="/AssetManagment/assetprofile" asp-page-handler="AddAssetWarranty" asp-route-AssetId="@Model" enctype="multipart/form-data">
+                                        <div class="modal-content bd-0 tx-14">
+                                            <div class="modal-header pd-y-20 pd-x-25">
+                                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="AssetDescriptiontxt"></h6>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body pd-25">
+                                                @(Html.DevExtreme().Form<AssetProject.Models.AssetWarranty>()
+                .ID("AddAssetWarranty")
+                .ColCount(1).Width(300).Height(250)
+                .Items(items =>
+                {
+                items.AddSimpleFor(m => m.Length).ValidationRules(r => r.AddRequired().Message("Lenght is required")).Label(l => l.Text(sharedResource["Length"])).Editor(e => e.NumberBox().Value(new JS("null"))).ValidationRules(r => r.AddRange().Min(1));
+                items.AddSimpleFor(m => m.ExpirationDate).ValidationRules(r => r.AddRequired().Message("Expiration Date is required")).Label(l => l.Text(sharedResource["Expiration Date"])).ValidationRules(r=>r.AddRange().Min(DateTime.Now));
+                items.AddSimpleFor(m => m.Notes).Editor(e => e.TextArea()).ValidationRules(r => r
+                 .AddRequired()
+                 .Message("Notes is required")).Label(l => l.Text(sharedResource["Notes"]));
+                items.AddGroup().ColCount(2)
+               .Items(groupItems =>
+               {
+                   groupItems.AddButton()
+                    .HorizontalAlignment(HorizontalAlignment.Center)
+                    .ButtonOptions(b => b.Text(@sharedResource["Save"])
+                        .Type(ButtonType.Default)
+                        .UseSubmitBehavior(true)
+                );
+                   groupItems.AddButton()
+                    .HorizontalAlignment(HorizontalAlignment.Center)
+                    .ButtonOptions(b => b.Text(sharedResource["Cancel"]).ElementAttr("data-dismiss", "modal")
+
+                        @*.UseSubmitBehavior(true)*@
+                );
+                   });
+                }
+                )
+                )
+            <br />
+
+        </div>
+                                        </div>
+                                    </form>
+                                </div><!-- modal-dialog -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function deleteButtonClickWarranty(data) {
+                    var grid = $('#gridWarrantyContainer').dxDataGrid('instance');
+                    var rowIndex = grid.getRowIndexByKey(data.WarrantyId)
+                    grid.deleteRow(rowIndex);
+                }
+                function DeattachWarrantyButtonClick(data) {
+
+                    $('#DeattacheAssetWarrantyPoup').modal('show');
+
+
+                    //$('#frmDeattachContract').dxForm('instance').option('formData', data);
+                    document.getElementById("AssetWarrantyIdFaild").value = data.WarrantyId;
+                    document.getElementById("WarrantylenghtFaild").value = data.Length;
+                    document.getElementById("WarrantyExpirationDate").value = DateFormat(data.ExpirationDate);
+
+
+                    //var pop = $('#DeattacheAssetContractPoup').dxPopup('instance');
+                    //     pop.option('visible', true);
+                    //     $("#DeattacheAssetContractPoup").dxPopup({
+                    //         title: data.AssetContractID,
+
+                    //     });
+                    //$('#DeattacheAssetContractPoup').modal('show');
+
+                }
+                window.addEventListener('DOMContentLoaded', (event) => {
+                    if (localStorage.getItem("lang") != "") {
+
+                        if (localStorage.getItem("lang") == "ar") {
+                            console.log("In Page")
+                            dataGrid = $("#gridWarrantyContainer").dxDataGrid("instance");
+                            dataGrid.option("rtlEnabled", true);
+                        }
+                    }
+                });
+                function DateFormat(incomingdate) {
+                    var d = new Date(incomingdate),
+                        month = '' + (d.getMonth() + 1),
+                        day = '' + d.getDate(),
+                        year = d.getFullYear();
+                    if (month.length < 2)
+                        month = '0' + month;
+                    if (day.length < 2)
+                        day = '0' + day;
+                    var outcomingdate = [year, month, day].join('-');
+                    return outcomingdate;
+                }
+            </script>

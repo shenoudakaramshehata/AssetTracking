@@ -1,0 +1,57 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AssetManagment.SearchAssetModel
+@{
+}
+<div class="slim-mainpanel">
+      <div class="container">
+        <div class="slim-pageheader">
+          <ol class="breadcrumb slim-breadcrumb">
+            <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="#">@sharedResource["Asset"]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@sharedResource["Search Asset"]</li>
+          </ol>
+          <h6 class="slim-pagetitle">@sharedResource["Search Asset"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper"> 
+            <div class="form-layout">
+                <form method="post" enctype="multipart/form-data" id="SearchForm">
+                     <div class="row mg-b-25">
+                  
+              <div class="col-lg-4">
+                <div class="form-group">
+                 @* <label class="form-control-label">Search <span class="tx-danger">*</span></label>*@
+                  <input asp-for="@Model.AssetSerachVM.AssetSearchItem" class="form-control" id="SearchAssetInputField" placeholder="@sharedResource["searching"]">
+                   <span asp-validation-for="@Model.AssetSerachVM.AssetSearchItem" class="text-danger"></span>
+                </div>
+              </div><!-- col-4 -->
+
+            </div><!-- row -->
+         <div class="form-layout-footer">
+             <button class="btn btn-primary bd-0">@sharedResource["searching"]</button>
+                    </div><!-- form-layout-footer -->
+
+
+                </form>
+
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+              </div><!-- container -->
+            </div>
+            @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script> 
+       
+                     
+                    
+                      $('#SearchAssetInputField').keypress(function (e) {
+                        if (e.which == 13 ) {
+                         $('form#SearchForm').submit();
+                         return false;  
+                            }
+                    });
+                     }
+                
+    </script>
+}

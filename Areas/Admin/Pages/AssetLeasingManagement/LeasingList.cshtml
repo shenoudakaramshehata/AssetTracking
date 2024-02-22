@@ -1,0 +1,89 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AssetLeasingManagement.LeasingListModel
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Asset Management"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Leasing List"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Leasing List"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+            @*<a asp-area="Admin" asp-page="/ContractManagment/AddContract" class="btn btn-primary" style="float:right"> @sharedResource["Create Contract"]</a>*@
+   
+            <div class="table-wrapper">
+                <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+
+                    @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetLeasingDetails>()
+        .ID("leasinglistid")
+                    .DataSource(ds => ds.Mvc()
+                    .Controller("AssetLeasings")
+                    .LoadAction("Get")
+                    .Key("AssetLeasingDetailsId")
+                    )
+
+                    .ColumnAutoWidth(true)
+                    .WordWrapEnabled(true)
+                    .RemoteOperations(true)
+                    .ShowBorders(true)
+                    .Paging(p=>p.PageSize(10))
+                    .Pager(p=>p.ShowPageSizeSelector(true).AllowedPageSizes(new [] {10,20,40,80}))
+                    .SearchPanel(s=>s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+                    .FilterRow(filterRow => filterRow
+                    .Visible(true)
+                    .ApplyFilter(GridApplyFilterMode.Auto)
+                    )
+                    
+
+                .Columns(columns => {
+
+                    columns.AddFor(m => m.Asset.Photo).Caption(sharedResource["Photo"]).Width(100)
+                .AllowFiltering(false)
+                .AllowSorting(false)
+                .CellTemplate(@<text>
+                <div>
+                    <img src="/<%- value %>" alt="" width="35" height="35" />
+                </div>
+            </text>);
+
+                        columns.AddFor(m => m.Asset.AssetTagId).Caption(sharedResource["Asset TagId"]);
+
+
+                        columns.AddFor(m => m.Asset.AssetSerialNo).Caption(sharedResource["Serial"]);
+
+                columns.AddFor(m => m.AssetLeasing.StartDate).Caption(sharedResource["Leasing StartDate"]);
+
+                columns.AddFor(m => m.AssetLeasing.EndDate).Caption(sharedResource["Leasing EndtDate"]);
+                columns.AddFor(m => m.AssetLeasing.CustomerId).Caption(sharedResource["Customer"]).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("CustomersLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+                columns.AddFor(m => m.AssetLeasing.LeasedCost).Caption(sharedResource["Cost"]);
+
+                    })
+                    )
+
+                </div>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+            if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                dataGrid = $("#leasinglistid").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+</script>

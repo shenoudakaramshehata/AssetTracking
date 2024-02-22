@@ -1,0 +1,82 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.TechnicianManagement.EditTechnicianModel
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["SETUP"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Edit Technician"] </li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Technician Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+            <label class="section-title">@sharedResource["Please fill Technician information"]</label>
+            @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
+
+            <div class="form-layout">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Technician Name"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="technician.FullName" class="form-control" placeholder="@sharedResource["Enter Technician Name"]">
+                                <span asp-validation-for="technician.FullName" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"> @sharedResource["Mobile"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="technician.Mobile" class="form-control" placeholder="@sharedResource["Enter Mobile Number"]">
+                                <span asp-validation-for="technician.Mobile" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Address"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="technician.Address" class="form-control" placeholder="@sharedResource["Enter Address"]">
+                                <span asp-validation-for="technician.Address" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Remarks"]: <span class="tx-danger">*</span></label>
+                                <textarea asp-for="technician.Remarks" class="form-control" placeholder="@sharedResource["Enter Remarks"]"></textarea>
+                                <span asp-validation-for="technician.Remarks" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+
+                        <input asp-for="technician.TechnicianId" class="form-control" hidden>
+                        <input asp-for="technician.TenantId" class="form-control" hidden>
+
+
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <button class="btn btn-primary bd-0">@sharedResource["Edit"] </button>
+                        <a asp-area="Admin" asp-page="/TechnicianManagement/TechnicianList">
+                            <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Cancel"]' />
+                        </a>
+                    </div><!-- form-layout-footer -->
+                </form>
+
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ 
+}

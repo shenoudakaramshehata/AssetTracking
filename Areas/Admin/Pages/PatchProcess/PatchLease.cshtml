@@ -1,0 +1,242 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.PatchProcess.PatchLeaseModel
+@{
+}
+@Html.AntiForgeryToken()
+<div class="slim-mainpanel" style="position: relative;">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["ASSETS"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Patch Leasing"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Leasing"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="row row-sm">
+            <div class="col-lg-7">
+                <div class="card card-table">
+                    <div class="card-header">
+                        <h6 class="slim-card-title">@sharedResource["Asset List"]</h6>
+                        @*<p>Please search and select</p>*@
+                    </div><!-- card-header -->
+                    <div class="table-responsive">
+                          @(Html.DevExtreme().DataGrid<AssetProject.Models.Asset>()
+.ID("grid-container")
+.DataSource(ds => ds.Mvc()
+.Controller("Assets")
+.LoadAction("GetAssetsforleasing")
+.InsertAction("Post")
+.UpdateAction("Put")
+.DeleteAction("Delete")
+.Key("AssetId")
+)
+   .Selection(s => s.Mode(SelectionMode.Multiple))
+    .OnSelectionChanged("selection_changed")
+
+.HeaderFilter(headerFilter => headerFilter.Visible(true))
+.ColumnAutoWidth(true)
+.WordWrapEnabled(true)
+.ShowBorders(true)
+.Paging(p => p.PageSize(10))
+.Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 40, 80 }))
+.SearchPanel(s => s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+.FilterRow(filterRow => filterRow
+.Visible(true)
+.ApplyFilter(GridApplyFilterMode.Auto)
+)
+.HeaderFilter(headerFilter => headerFilter.Visible(true))
+
+.Columns(columns => {
+
+
+columns.AddFor(m => m.Photo).Width(100)
+.AllowFiltering(false)
+.AllowSorting(false)
+.CellTemplate(@<text>
+                            <div>
+                                <img src="/<%- value %>" alt="" width="35" height="35" />
+                            </div>
+                        </text>).Caption(sharedResource["Photo"]);
+
+    columns.AddFor(m => m.AssetTagId).Caption(sharedResource["Asset TagId"]);
+
+    columns.AddFor(m => m.AssetCost).Caption(sharedResource["AssetCost"]);
+    //columns.AddFor(m => m.AssetStatus.AssetStatusTitle).Caption("Status");
+    columns.AddFor(m => m.AssetStatusId).Caption(sharedResource["Status"]).Lookup(lookup => lookup
+    .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("AssetStatusesLookup").Key("Value"))
+    .ValueExpr("Value")
+    .DisplayExpr("Text")
+    );
+
+
+
+
+
+})
+.RemoteOperations(true)
+
+
+                    )
+                    </div><!-- table-responsive -->
+                
+                </div>
+            </div>
+
+
+
+            <div class="col-lg-5 mg-t-20 mg-lg-t-0">
+                <div class="section-wrapper">
+                    <label class="section-title">@sharedResource["Leasing Information"]</label>
+                    @*<p class="mg-b-20 mg-sm-b-40">Please fill below check-out information.</p>*@
+                    <div class="form-layout form-layout-5">
+                        <form asp-area="Admin" method="post" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="row mg-b-25">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>@sharedResource["StartDate"]: <span class="tx-danger">*</span></label>
+                                        <input asp-for="@Model.assetLeasing.StartDate" type="date" class="form-control date" value="@(Model.assetLeasing.StartDate >= DateTime.Now ? Model.assetLeasing.StartDate : string.Empty)">
+                                        <span asp-validation-for="@Model.assetLeasing.StartDate" class="text-danger"></span>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>@sharedResource["EndDate"]: <span class="tx-danger">*</span></label>
+                                        <input asp-for="@Model.assetLeasing.EndDate" type="date" class="form-control"value=""  >
+                                        <span asp-validation-for="@Model.assetLeasing.EndDate" class="text-danger"></span>
+                                    </div>
+                                </div><!-- col-4 -->
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>@sharedResource["Leased Cost"]: <span class="tx-danger">*</span></label>
+                                        <input asp-for="@Model.assetLeasing.LeasedCost" min="0" class="form-control" value="" placeholder="@sharedResource["Please Enter Leased Cost"]">
+                                        <span asp-validation-for="@Model.assetLeasing.LeasedCost" class="text-danger"></span>
+                                    </div>
+                                </div><!-- col-4 -->
+
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>@sharedResource["Customer"]: <span class="tx-danger">*</span></label>
+
+                                        @(Html.DevExtreme().LookupFor(c=>c.assetLeasing.CustomerId)
+                                        .DataSource(d => d.WebApi()
+                                        .Controller("Lookups")
+                                        .LoadAction("CustomersLookup")
+                                        .Key("Value")
+                                        )
+
+                                        .ValueExpr("Value")
+                                        .DisplayExpr("Text").Placeholder(sharedResource["Select Customer"])
+                                        .ShowClearButton(true)
+                                        .ClearButtonText(sharedResource["Clear"])
+                                        .CancelButtonText(sharedResource["Cancel"])
+                                        .SearchPlaceholder(sharedResource["searching"])
+                                        )
+                                        <span asp-validation-for="@Model.assetLeasing.CustomerId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>@sharedResource["Notes"] <span class="tx-danger">*</span></label>
+                                        <textarea asp-for="@Model.assetLeasing.Notes" class="form-control" placeholder=""></textarea>
+                                        <span asp-validation-for="@Model.assetLeasing.Notes" class="text-danger"></span>
+                                    </div>
+                                </div><!-- col-4 -->
+                                @* <input name="AssetId" hidden id="checkoutAssetIdField" />*@
+                            </div><!-- row -->
+
+                            <div class="row mg-t-30">
+                                <div class="col-sm-8 mg-l-auto">
+                                    <div class="form-layout-footer">
+                                        <button type="submit" class="btn btn-primary">@sharedResource["Save"]</button>
+                                    </div><!-- form-layout-footer -->
+                                </div><!-- col-8 -->
+                            </div>
+
+
+                        </form>
+                    </div><!-- form-layout -->
+                </div><!-- section-wrapper -->
+            </div><!-- col-6 -->
+        </div>
+    </div>
+    </div>
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+    <script>
+        
+          window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+             if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                 dataGrid = $("#grid-container").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+
+               function getDataGridInstance() {
+        return $("#grid-container").dxDataGrid("instance");
+    }
+
+    function selection_changed(selectedItems) 
+    {
+        var dataGrid = getDataGridInstance();
+        var data = selectedItems.selectedRowsData;
+        console.log(data)
+        console.log(data.length)
+
+        console.log(typeof data)
+        const myJSON = JSON.stringify(data)
+          console.log(myJSON)
+        console.log(myJSON.length)
+
+        console.log(typeof myJSON)
+        if(data.length > 0) 
+        {
+             $.ajax({
+         type: "POST",
+        beforeSend: function (xhr) {
+         xhr.setRequestHeader("XSRF-TOKEN",
+             $('input:hidden[name="__RequestVerificationToken"]').val());
+        }
+        ,
+      url: "/admin/PatchProcess/PatchLease?handler=FillAssetList",
+         async: false,
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+            console.log("get selected rows successfully"+response)
+                
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+
+        } 
+        else
+        {
+            console.log("Nobody has been selected")
+            
+        }
+
+        }
+        $(function () {
+            var date = new Date().toISOString().slice(0, 10);
+
+            //To restrict past date
+
+            $('.date').attr('min', date);
+
+
+        });
+
+    </script>

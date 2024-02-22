@@ -1,0 +1,271 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AssetManagment.IndexModel
+@{
+}
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["ASSETS"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Assets List"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Assets List"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+            <a asp-area="Admin" asp-page="/AssetManagment/AddAsset" class="btn btn-primary">@sharedResource["Add New Asset"]  </a>
+            <br />
+            <br />
+            <br />
+            <div class="table-wrapper">
+                <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                    @(Html.DevExtreme().DataGrid<AssetProject.Models.Asset>()
+        .ID("AssetLookupListId")
+        .RtlEnabled(bool.Parse(sharedResource["Direction"]))
+                    .DataSource(ds => ds.RemoteController()
+                    .LoadUrl(Url.Page(null, "GridData")) // access to the GridData handler defined in the OnGetGridData method in the page model
+                    .Key("AssetId")
+                    .OnBeforeSend("grid_dataSource_beforeSend") // passes an antiforgery token
+                    )
+
+                    .RemoteOperations(true)
+                    .Editing(e => e
+                    .AllowAdding(false)
+                    .AllowUpdating(false)
+                    .AllowDeleting(false)
+                    )
+                    .HeaderFilter(headerFilter => headerFilter.Visible(true))   .ColumnAutoWidth(true) .ShowBorders(true) .Paging(p=>p.PageSize(10))
+                    .Pager(p=>p.ShowPageSizeSelector(true).AllowedPageSizes(new [] {10,20,40,80}))
+                    .SearchPanel(s=>s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+                    .FilterRow(filterRow => filterRow
+                    .Visible(true)
+                    .ApplyFilter(GridApplyFilterMode.Auto)
+                    )
+                    .HeaderFilter(headerFilter => headerFilter.Visible(true))
+                    .ColumnFixing(c => c.Enabled(true))
+                    .Columns(columns => {
+                    columns.Add()
+                    .Type(GridCommandColumnType.Buttons)
+                    .Width(135)
+                    .Buttons(b => {
+                    b.Add().Text(sharedResource["View"]).OnClick("viewButtonClick");
+                    b.Add().Text(sharedResource["Edit"]).OnClick("editButtonClick");
+                        b.Add().Template(@<text>
+
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                                 <a  href="/Admin/ReportsManagement/ExprtRFID?tagId=<%- data.AssetTagId %>&serialno=<%- data.AssetSerialNo %>"> @sharedResource["Export"]   </a>
+                            </div>
+                            </text>);
+                    });
+                    columns.AddFor(m => m.AssetId).Visible(false).Caption(sharedResource["Asset"]);
+                        columns.AddFor(m => m.Photo).Width(100)
+                    .AllowFiltering(false)
+                    .AllowSorting(false)
+                    .CellTemplate(@<text>
+                            <div>
+                                <img src="<%- '/' + value %>" alt="" width="35" height="35" />
+                            </div>
+                        </text>).Caption(sharedResource["Photo"]);
+                    columns.AddFor(m => m.AssetTagId).CellTemplate(@<text><a href="javascript:void(0)" onclick="ShowViewPopUp('<%- data.AssetId %>')"><%- value %></a> </text>).Caption(sharedResource["Asset TagId"]); ;
+                        //columns.AddFor(m=>m.AssetDescription).Fixed(true).Caption(sharedResource["Asset Description"]);
+                        columns.AddFor(m => m.AssetCost).Caption(sharedResource["AssetCost"]);
+                        columns.AddFor(m => m.AssetSerialNo).Caption(sharedResource["AssetSerialNo"]);
+                        columns.AddFor(m => m.AssetPurchaseDate).Caption(sharedResource["AssetPurchaseDate"]);
+                        columns.AddFor(m => m.ItemId).Lookup(lookup => lookup
+                        .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("ItemsLookup").Key("Value"))
+                        .ValueExpr("Value")
+                        .DisplayExpr("Text")
+                        ).Caption(sharedResource["Item"]);
+                        columns.AddFor(m => m.DepreciableAsset).Visible(false);
+                        columns.AddFor(m => m.DepreciableCost).Visible(false);
+                        columns.AddFor(m => m.SalvageValue).Visible(false);
+                        columns.AddFor(m => m.AssetLife).Visible(false);
+                        columns.AddFor(m => m.DateAcquired).Visible(false);
+                        columns.AddFor(m => m.DepreciationMethodId).Lookup(lookup => lookup
+                        .DataSource(ds => ds.WebApi().Controller("AssetsManagement").LoadAction("DepreciationMethodsLookup").Key("Value"))
+                        .ValueExpr("Value")
+                        .DisplayExpr("Text")
+                        ).Visible(false);
+                    })
+
+
+                    )
+
+                </div>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+<partial name="_AssetQuickViewPopup" />
+<partial name="_AssetEditPopup" model="@Model.Asset"/>
+
+
+
+
+<script>
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+            if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                //dataGrid = $("#AssetLookupListId").dxDataGrid("instance");
+                //dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+
+            function grid_dataSource_beforeSend(op, ajax) {
+                    ajax.headers = {
+                    RequestVerificationToken: "@Xsrf.GetAndStoreTokens(Model.HttpContext).RequestToken"
+                };
+            }
+            function ShowViewPopUp(AssetId)
+            {
+
+
+    $.ajax({
+        type: "GET",
+        url: "/admin/assetmanagment/Index?handler=SingleAssetForView",
+        data: { "AssetId": AssetId },
+        contentType: "application/json",
+        dataType: "json",
+        success: function (response) {
+            document.getElementById("img").src ="/"+response.Photo
+            document.getElementById("AssetTagId").innerHTML = response.AssetTagId
+            document.getElementById("assettagid").innerHTML = response.AssetTagId
+            document.getElementById("AssetSerial").innerHTML = response.AssetSerialNo
+            document.getElementById("AssetDescription").innerHTML = response.AssetDescription
+            document.getElementById("AssetCost").innerHTML = response.AssetCost
+            document.getElementById("AssetPurchaseDate").innerHTML = response.AssetPurchaseDate
+            document.getElementById("AssetItem").innerHTML = response.Item.ItemTitle
+            document.getElementById("Assetpurchasenumber").innerHTML = response.PurchaseNo
+            if (response.DepreciableAsset)
+            {
+            document.getElementById("DepreciationInfo").style.display = 'block';
+            document.getElementById("DepreciableCost").innerHTML = response.DepreciableCost
+            document.getElementById("SalvageValue").innerHTML = response.SalvageValue
+            document.getElementById("AssetLife").innerHTML = response.AssetLife
+            document.getElementById("DateAcquired").innerHTML = response.DateAcquired
+            document.getElementById("DepreciationMethod").innerHTML = response.DepreciationMethod.DepreciationMethodTitle
+            }
+            else
+            {
+              document.getElementById("DepreciationInfo").style.display='none';
+            }
+
+             $('#AssetQuickViewPoup').modal('show');
+
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+
+
+            }
+
+
+    function editButtonClick(e) {
+       //alert("Come on edit")
+        console.log(e.row.data);
+    $.ajax({
+        type: "GET",
+        url: "/admin/assetmanagment/Index?handler=SingleAssetForEdit",
+        data: { "AssetId": e.row.data.AssetId },
+        contentType: "application/json",
+        dataType: "json",
+        success: function (response) {
+
+              // $('#frmEdit').dxForm('instance').option('formData',response);
+            document.getElementById("EditAssetDescriptiontxt").innerHTML = response.AssetTagId
+            document.getElementById("AtagId").value = response.AssetTagId
+            document.getElementById("AssetId").value = response.AssetId
+            document.getElementById("AssetphotoId").value = response.Photo
+            document.getElementById("AssetStatusId").value = response.AssetStatusId
+            document.getElementById("AssettenantId").value = response.TenantId
+            document.getElementById("Acost").value = response.AssetCost
+            document.getElementById("AserialNum").value = response.AssetSerialNo
+            document.getElementById("purchasenumber").value = response.PurchaseNo
+            document.getElementById("ApurshaseDate").value = DateFormat(response.AssetPurchaseDate)
+            $("#AItem").dxLookup("instance").option("value", response.ItemId);
+            $("#AStore").dxLookup("instance").option("value", response.StoreId);
+            $("#Avendor").dxLookup("instance").option("value", response.VendorId);
+            document.getElementById("ADescription").value = response.AssetDescription
+            document.getElementById("ADepreciable").value = response.DepreciableCost
+            document.getElementById("ASalvageValue").value = response.SalvageValue
+            document.getElementById("ALife").value = response.AssetLife
+
+            $("#ADepreciationMetod").dxLookup("instance").option("value", response.DepreciationMethodId);
+            const form = document.getElementById('depreciable')
+            var btn1 = document.getElementById('DA1');
+            var btn2 = document.getElementById('DA2');
+
+            if (response.DepreciableAsset) {
+                console.log("true")
+                btn1.removeAttribute('checked');
+                btn1.setAttribute('checked', 'checked');
+                btn2.removeAttribute('checked');
+                console.log(response.DateAcquired);
+                document.getElementById("AdateAcquired").value = DateFormat(response.DateAcquired);
+                form.style.display = 'flex';
+            } if (!response.DepreciableAsset)
+            {
+                console.log("false")
+                btn1.removeAttribute('checked');
+                btn2.removeAttribute('checked');
+                btn2.setAttribute('checked', 'checked');
+                document.getElementById("AdateAcquired").value = null;
+                console.log("false");
+                form.style.display = 'none';
+
+            }
+               $('#AssetEditPoup').modal('show');
+
+        },
+        failure: function (response) {
+            alert(response);
+        }
+    });
+
+
+
+
+
+    }
+
+     function viewButtonClick(e)
+     {
+       //alert("Come on View")
+
+       console.log(e.row.data);
+       document.location = '/Admin/AssetManagment/AssetProfile?AssetId=' + e.row.data.AssetId;
+    }
+
+    function DateFormat(incomingdate) {
+        var d = new Date(incomingdate),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+        var outcomingdate = [year, month, day].join('-');
+        return outcomingdate;
+    }
+  
+   
+</script>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}

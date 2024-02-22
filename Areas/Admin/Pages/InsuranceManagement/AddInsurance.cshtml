@@ -1,0 +1,145 @@
+﻿@page 
+@model AssetProject.Areas.Admin.Pages.InsuranceManagement.AddInsuranceModel
+@{
+    
+}
+<div class="slim-mainpanel">
+      <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["ASSETS"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["AddInsurancePolicy"]</li>
+            </ol>
+          <h6 class="slim-pagetitle">@sharedResource["InsurancePolicyInformation"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+
+              <label class="section-title">@sharedResource["plzFIPI"]</label>
+          <div class="form-layout">
+              <form method="post" enctype="multipart/form-data">
+                  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                  <div class="row mg-b-25">
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label">@sharedResource["InsuranceTitle"] : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.Title" class="form-control" placeholder="@sharedResource["EnterInsuranceTitle"]">
+                              <span asp-validation-for="@Model.insurance.Title" class="text-danger"></span>
+                          </div>
+                      </div><!-- col-4 -->
+
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label"> @sharedResource["Description"] : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.Description" class="form-control" placeholder="@sharedResource["EnterDescription"]">
+                              <span asp-validation-for="@Model.insurance.Description" class="text-danger"></span>
+                          </div>
+                      </div>
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label">@sharedResource["InsuranceCompany"]  : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.InsuranceCompany" class="form-control" placeholder="@sharedResource["EnterInsuranceCompany"]">
+                              <span asp-validation-for="@Model.insurance.InsuranceCompany" class="text-danger"></span>
+                          </div>
+                      </div><!-- col-4 -->
+                  </div><!--End Row-->
+                  <div class="row mg-b-20">
+                      <div class="col-lg-4">
+                          <div class="form-group mg-b-10-force">
+                              <label class="form-control-label">@sharedResource["ContactPerson"]  : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.ContactPerson" class="form-control" placeholder="@sharedResource["EnterContactPerson"]">
+                              <span asp-validation-for="@Model.insurance.ContactPerson" class="text-danger"></span>
+                          </div>
+                      </div><!-- col-4 -->
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label">@sharedResource["Phone"] : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.Phone" class="form-control" placeholder="@sharedResource["EnterPhoneNumber"]">
+                              <span asp-validation-for="@Model.insurance.Phone" class="text-danger"></span>
+                          </div>
+                      </div><!-- col-4 -->
+
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label">@sharedResource["PolicyNumber"]: <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.PolicyNo" class="form-control" placeholder="@sharedResource["EnterPolicyNumber"]">
+                              <span asp-validation-for="@Model.insurance.PolicyNo" class="text-danger"></span>
+                          </div>
+                      </div><!-- col-4 -->
+
+                  </div><!--End Row-->
+                  <div class="row mg-b-15">
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label">@sharedResource["StartDate"] : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.StartDate" type="date" class="form-control date" value="">
+                              <span asp-validation-for="@Model.insurance.StartDate" class="text-danger"></span>
+                          </div>
+                      </div><!-- col-6 -->
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label">@sharedResource["EndDate"] : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.EndDate" type="date" class="form-control date" value="">
+                              <span asp-validation-for="@Model.insurance.EndDate" class="text-danger"></span>
+                          </div>
+
+                      </div><!-- col-6 -->
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label">@sharedResource["Deductible"] : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.Deductible" class="form-control" placeholder="@sharedResource["EnterDeductible"] " value="">
+                              <span asp-validation-for="@Model.insurance.Deductible" class="text-danger"></span>
+                          </div>
+                      </div><!-- col-6 -->
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label">@sharedResource["Permium"] : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.Permium" class="form-control" placeholder="@sharedResource["EnterPermium"]" value="">
+                              <span asp-validation-for="@Model.insurance.Permium" class="text-danger"></span>
+                          </div>
+                      </div><!-- col-6 -->
+                      <div class="col-lg-4">
+                          <div class="form-group">
+                              <label class="form-control-label"> @sharedResource["IsActive"]  : <span class="tx-danger">*</span></label>
+                              <input asp-for="@Model.insurance.IsActive" class="form-control">
+                              <span asp-validation-for="@Model.insurance.IsActive" class="text-danger"></span>
+                          </div>
+                      </div>
+                  </div><!--End Row-->
+                  
+                  
+                  @*<div class="form-check">
+            <input asp-for="@Model.insurance.IsActive" class="form-check-input" type="checkbox">
+            <label asp-for="@Model.insurance.IsActive"> @sharedResource["IsActive"]   </label>
+        </div>*@
+
+                  <div class="form-layout-footer mt-4 ">
+                      <button class="btn btn-primary bd-0">@sharedResource["CreatePolicyInsurance"]</button>
+                      <a asp-area="admin" class="btn btn-secondary " asp-page="InsuranceList">@sharedResource["Cancel"]</a>
+                  </div><!-- form-layout-footer -->
+              </form>
+          </div><!-- form-layout -->
+        </div><!-- section-wrapper --> 
+  </div><!-- container -->
+</div>
+
+    
+ @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  
+    </script>
+ <script>
+
+$(function(){
+    var date = new Date().toISOString().slice(0,10);
+  
+}
+
+$('.date').attr('min', date);
+
+
+});
+    </script>
+}
+

@@ -1,0 +1,71 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.ReportsManagement.AssetHistoryModel
+@{
+    
+        var priorities = new[] { "Tag Id", "Serial Number" };
+    };
+    
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Reports"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Transaction History Report"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Transaction History"]</h6>
+        </div><!-- slim-pageheader -->
+
+
+
+        <div class="row row-sm row-timeline">
+            <div class="col-lg-3  mg-lg-t-0">
+                <div class="card pd-20 mg-t-20">
+                    <label class="slim-card-title">@sharedResource["Filter"]</label>
+                    <div class="post-group">
+
+                        @using (Html.BeginForm(FormMethod.Post))
+                            @(Html.DevExtreme().Form<AssetProject.ReportModels.FilterModel>()
+                                .FormData(Model.filterModel)
+                                .LabelMode(FormLabelMode.Outside)
+            .LabelLocation(FormLabelLocation.Top)
+    .Items(items => {
+        items.AddSimpleFor(m => m.radiobtn).IsRequired(true).Editor(e => e.RadioGroup().Items(priorities)
+                    .Value("Tag Id")
+                    .Layout(Orientation.Horizontal));
+        items.AddSimpleFor(m => m.AssetSerialNo).IsRequired(true).Label(l => l.Text("Search"));
+
+        items.AddButton()
+       .HorizontalAlignment(HorizontalAlignment.Left)
+       .ButtonOptions(b => b.Text(sharedResource["Send"])
+       .Type(ButtonType.Success)
+       .UseSubmitBehavior(true)
+       );
+    })
+)
+                    </div><!-- post-group -->
+                </div><!-- card -->
+            </div>
+            <div class="col-lg-9">
+
+                <div class="card pd-30">
+                    <div class="timeline-group">
+                        @using AssetProject.Reports
+
+                        <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+
+                        <script src="~/js/viewer.part.bundle.js"></script>
+
+                        @Html.DevExpress().WebDocumentViewer("DocumentViewer").Height("1000px").Bind(Model.Report)
+                    </div><!-- timeline-group -->
+                </div><!-- card -->
+
+            </div><!-- col-9 -->
+            <!-- col-3 -->
+        </div><!-- row -->
+
+
+
+    </div><!-- container -->
+</div>

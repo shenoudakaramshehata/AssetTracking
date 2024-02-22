@@ -1,0 +1,55 @@
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+  
+@{
+  
+}
+ @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetLog>()
+     .ID("gridHistoryContainer")
+    .DataSource(ds => ds.Mvc()
+        .Controller("AssetLogs")
+        .LoadAction("Get")
+        .LoadParams(new { AssetId = Model })
+        .Key("AssetLogId")
+    )
+     .ColumnAutoWidth(true)
+     .WordWrapEnabled(true)
+     .ShowBorders(true)  
+    .RemoteOperations(true)
+    .ShowBorders(true)
+                    .Paging(p=>p.PageSize(10))
+                    .Pager(p=>p.ShowPageSizeSelector(true).AllowedPageSizes(new [] {10,20,40,80}))
+                    .SearchPanel(s=>s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+                    .FilterRow(filterRow => filterRow
+                    .Visible(true)
+                    .ApplyFilter(GridApplyFilterMode.Auto)
+                    )
+                    .HeaderFilter(headerFilter => headerFilter.Visible(true))
+    .Columns(columns => {
+
+         columns.AddFor(m => m.ActionLogId).Caption(sharedResource["Action Name"]).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("AssetLogs").LoadAction("ActionLogsLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+        columns.AddFor(m => m.ActionDate).Caption(sharedResource["Action Date"]);
+
+        columns.AddFor(m => m.Remark).Caption(sharedResource["Remark"]);
+       
+    })
+)
+
+<script>
+      window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+             if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                 dataGrid = $("#gridHistoryContainer").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+</script>

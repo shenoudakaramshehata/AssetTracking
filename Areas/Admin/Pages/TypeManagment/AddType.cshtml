@@ -1,0 +1,71 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.TypeManagment.AddTypeModel
+@{
+}
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["SETUP"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["AddType"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["TypeInformation"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+            <label class="section-title">@sharedResource["plzFTI"]</label>
+            @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
+
+            <div class="form-layout">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["TypeTitle"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Type.TypeTitle" class="form-control" placeholder="@sharedResource["EnterTypeTitle"]">
+                                <span asp-validation-for="Type.TypeTitle" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["BrandTitle"]: <span class="tx-danger">*</span></label>
+
+                                @(Html.DevExtreme().LookupFor(c=>c.Type.BrandId)
+                                .DataSource(d => d.WebApi()
+                                    .Controller("Lookups")
+                                    .LoadAction("BrandsLookup")
+                                    .Key("Value")
+                                )
+                                .ValueExpr("Value")
+                                .DisplayExpr("Text").Placeholder(sharedResource["Select Brand"])
+                                .ShowClearButton(true)
+                                .ClearButtonText(sharedResource["Clear"])
+                                .CancelButtonText(sharedResource["Cancel"])
+                                .SearchPlaceholder(sharedResource["searching"])
+                                )
+                                <span asp-validation-for="Type.BrandId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div><!-- row -->
+
+                    <div class="form-layout-footer">
+                        <button class="btn btn-primary bd-0">@sharedResource["CreateType"] </button>
+                        <a asp-area="Admin" asp-page="/BrandManagment/BrandList">
+                            <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Cancel"]' />
+                        </a>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

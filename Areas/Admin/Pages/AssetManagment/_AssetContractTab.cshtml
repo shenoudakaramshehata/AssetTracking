@@ -1,0 +1,164 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+}
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="table-wrapper">
+            <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                <label class="section-title d-inline">@sharedResource["Contracts"]</label>
+                <a href="javascript:void(0)" onclick="ShowAssetcontractPopUp('<%- data.AssetId %>')" class="btn btn-primary" style="float:right">@sharedResource["Link Contract"]  </a>
+            </div><!-- slim-pageheader -->
+            <br />
+            <br />
+            @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetContract>()
+.ID("gridContractContainer")
+.DataSource(ds => ds.Mvc()
+.Controller("AssetContracts")
+.LoadAction("Get")
+//.InsertAction("Post")
+.LoadParams(new { AssetId = Model})
+//.UpdateAction("Put")
+.DeleteAction("Delete")
+.Key("AssetContractID")
+)
+.RemoteOperations(true)
+.ShowBorders(true)
+.Paging(p => p.PageSize(10))
+.Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 40, 80 }))
+.FilterRow(filterRow => filterRow
+    .Visible(true)
+    .ApplyFilter(GridApplyFilterMode.Auto)
+)
+  .HeaderFilter(headerFilter => headerFilter.Visible(true))
+.Columns(columns =>
+{
+    columns.AddFor(m => m.Contract.Title).Caption(sharedResource["Contract Title"]);
+    columns.AddFor(m => m.Contract.StartDate).Caption(sharedResource["StartDate"]);
+    columns.AddFor(m => m.Contract.EndDate).Caption(sharedResource["EndDate"]);
+    columns.AddFor(m => m.Contract.Description).Caption(sharedResource["Contract Description"]);
+
+columns.Add().Width(160).Alignment(HorizontalAlignment.Center)
+.CellTemplate(@<text>
+                            @Html.DevExtreme().Button().Text(sharedResource["Detach"]).OnClick("function (e) { DeattachButtonClick(data)}")
+  </text>);
+    })
+    )
+            </div>
+        </div>
+    </div>
+            <partial name="_DeattachAssetContractPopup" />
+            <div class="slim-mainpanel">
+                <div class="container">
+                    <div class="table-wrapper">
+                        <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                            <div id="AssetContractEditPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+                                    <form asp-area="Admin" asp-page="/AssetManagment/assetprofile" asp-page-handler="AddAssetContract" asp-route-AssetId="@Model" enctype="multipart/form-data">
+                                        <div class="modal-content bd-0 tx-14">
+                                            <div class="modal-header pd-y-20 pd-x-25">
+                                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="AssetDescriptiontxt"></h6>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body pd-25">
+                                                @(Html.DevExtreme().Form<AssetProject.Models.AssetContract>()
+                .ID("addassetcontract")
+                .ColCount(1).Width(400).Height(100)
+                .Items(items =>
+                {
+
+                    items.AddSimpleFor(m => m.ContractId).Label(l=>l.Text(sharedResource["Contract"]))
+                    .IsRequired(true)
+                    .Editor(e => e
+                    .Lookup()
+                    .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("ContractsLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text").Placeholder(sharedResource["Select Contract"]).Width(250)
+                                        .ShowClearButton(true)
+                                        .ClearButtonText(sharedResource["Clear"])
+                                        .CancelButtonText(sharedResource["Cancel"])
+                                        .SearchPlaceholder(sharedResource["searching"])
+                    );
+items.AddGroup().ColCount(2)
+                   .Items(groupItems =>
+                   {
+                   groupItems.AddButton()
+                                       .HorizontalAlignment(HorizontalAlignment.Center)
+                                       .ButtonOptions(b => b.Text(@sharedResource["Save"])
+                                           .Type(ButtonType.Default)
+                                           .UseSubmitBehavior(true)
+                                   );
+                   groupItems.AddButton()
+                                       .HorizontalAlignment(HorizontalAlignment.Center)
+                                       .ButtonOptions(b => b.Text(sharedResource["Cancel"]).ElementAttr("data-dismiss", "modal")
+
+                );
+
+                       });
+                })
+                )
+
+            <br />
+
+        </div>
+                                        </div>
+                                    </form>
+                                </div><!-- modal-dialog -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function changephotoname() {
+                    console.log("in photo")
+                    var fileName = document.getElementById("Photo").value.split("\\").pop();;
+                    document.getElementById("photolabel").innerHTML = fileName;
+
+                }
+                function deleteButtonClickcontract(data) {
+                    var grid = $('#gridContractContainer').dxDataGrid('instance');
+                    var rowIndex = grid.getRowIndexByKey(data.AssetContractID)
+                    grid.deleteRow(rowIndex);
+                }
+                function DeattachButtonClick(data) {
+
+                    $('#DeattacheAssetContractPoup').modal('show');
+
+
+                    //$('#frmDeattachContract').dxForm('instance').option('formData', data);
+                    document.getElementById("AssetContractIdFaild").value = data.AssetContractID;
+                    document.getElementById("ContractIdFaild").value = data.Contract.Title;
+                    document.getElementById("ContractIdFaildHidden").value = data.ContractId;
+
+
+                    //var pop = $('#DeattacheAssetContractPoup').dxPopup('instance');
+                    //     pop.option('visible', true);
+                    //     $("#DeattacheAssetContractPoup").dxPopup({
+                    //         title: data.AssetContractID,
+
+                    //     });
+                    //$('#DeattacheAssetContractPoup').modal('show');
+
+                }
+             
+     window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+             if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                 dataGrid = $("#gridContractContainer").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+</script>
+
+            

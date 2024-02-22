@@ -1,0 +1,77 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AssetBrokenManagement.AssetBrokenListModel
+@{ }
+<div class="slim-mainpanel">
+    <div class="container">
+        <<div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["ASSETS"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Asset Broken"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Asset Broken List"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+            @*<label class="section-title d-inline">@sharedResource["Asset Broken List"]</label>
+
+            <p class="mg-b-20 mg-sm-b-40">@sharedResource["Search"]</p>*@
+            <div class="table-wrapper">
+                <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                    @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetBrokenDetails>()
+.ID("AssetBrokenlistid")
+.DataSource(ds => ds.Mvc()
+.Controller("AssetBrokens")
+.LoadAction("Get")
+.Key("AssetBrokenDetailsId")
+)
+.ShowBorders(true)
+.RemoteOperations(true)
+.Paging(p => p.PageSize(10))
+                .Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 40, 80 }))
+                .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+                .FilterRow(filterRow => filterRow
+                .Visible(true)
+                .ApplyFilter(GridApplyFilterMode.Auto)
+                  )
+.Columns(columns => {
+columns.AddFor(m => m.Asset.Photo).Caption(sharedResource["Photo"]).Width(100)
+.AllowFiltering(false)
+.AllowSorting(false)
+.CellTemplate(@<text>
+                <div>
+                    <img src="/<%- value %>" alt="" width="35" height="35" />
+                </div>
+            </text>);
+
+        columns.AddFor(m => m.Asset.AssetTagId).Caption(sharedResource["Asset TagId"]);
+
+        columns.AddFor(m => m.Asset.AssetCost).Caption(sharedResource["AssetCost"]);
+
+        columns.AddFor(m => m.Asset.AssetSerialNo).Caption(sharedResource["AssetSerialNo"]);
+
+columns.AddFor(m => m.AssetBroken.DateBroken).Caption(sharedResource["Date Broken"]);
+
+columns.AddFor(m => m.AssetBroken.Notes).Caption(sharedResource["Notes"]);
+
+
+    })
+)
+                </div>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+            if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                dataGrid = $("#AssetBrokenlistid").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+</script>

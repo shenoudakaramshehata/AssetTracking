@@ -1,0 +1,530 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AssetManagment.AssetProfileModel
+@{
+    ViewData["AssetId"] = Model.Asset.AssetId;
+}
+@using System.Globalization;
+
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Pages"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Asset Information"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Asset Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="row row-sm">
+            <div class="col-lg-12">
+                <div class="card card-profile">
+                    <div class="card-body">
+                        <div class="media">
+                            <img src="@Model.AssetPhoto" style="border-radius:0" alt="">
+                            <div class="media-body">
+                                <div class="card-profile-name" style="font-size:x-large;display:inline-block">@sharedResource["Asset Description"]</div>
+                                <div style="color:#10ea55">
+
+                                    @sharedResource["Status"] :@Model.Asset.AssetStatus.AssetStatusTitle
+                                </div>
+
+                                <p class="card-profile-position">@sharedResource["Asset TagId"] @Model.Asset.AssetTagId</p>
+                                <p>@sharedResource["Serial"] @Model.Asset.AssetSerialNo</p>
+                                <div class="row mg-t-20">
+                                    <div class="col-md">
+                                        <label class="section-label-sm tx-gray-500">@sharedResource["General Information"]</label>
+                                        <p class="invoice-info-row">
+                                            <span>@sharedResource["Asset Description"]</span>
+                                            <span>@Model.Asset.AssetDescription</span>
+                                        </p>
+                                        <p class="invoice-info-row">
+                                            <span>@sharedResource["AssetCost"]</span>
+                                            <span>@Model.Asset.AssetCost</span>
+                                        </p>
+                                        <p class="invoice-info-row">
+                                            <span>@sharedResource["Item"]</span>
+                                            <span>@Model.Asset.Item.ItemTitle</span>
+                                        </p>
+                                        <p class="invoice-info-row">
+                                            <span>@sharedResource["AssetPurchaseDate"]</span>
+                                            <span>
+                                                @Model.Asset.AssetPurchaseDate.ToString("dd/M/yyyy", CultureInfo.InvariantCulture)
+                                            </span>
+                                        </p>
+                                    <p class="invoice-info-row">
+                                            <span>@sharedResource["Purchase Number"]</span>
+                                            <span>
+                                                @Model.Asset.PurchaseNo
+                                            </span>
+                                        </p>
+                                    </div><!-- col -->
+                                    @if (Model.Asset.DepreciableAsset)
+                                    {
+                                        <div class="col-md">
+                                            <label class="section-label-sm tx-gray-500">@sharedResource["Depreciation Information"]</label>
+                                            <p class="invoice-info-row">
+                                                <span>@sharedResource["Depreciable Cost"]</span>
+                                                <span>@Model.Asset.DepreciableCost</span>
+                                            </p>
+                                            <p class="invoice-info-row">
+                                                <span>@sharedResource["Salvage Value"]</span>
+                                                <span>@Model.Asset.SalvageValue</span>
+                                            </p>
+                                            <p class="invoice-info-row">
+                                                <span>@sharedResource["Asset Life"]</span>
+                                                <span>@Model.Asset.AssetLife</span>
+                                            </p>
+                                            <p class="invoice-info-row">
+                                                <span>@sharedResource["Date Acquired"]</span>
+                                                <span>@Model.Asset.DateAcquired.Value.ToString("dd/M/yyyy", CultureInfo.InvariantCulture)</span>
+                                            </p>
+
+                                            <p class="invoice-info-row">
+                                                <span>@sharedResource["Depreciation Method"]</span>
+                                                <span>@Model.Asset.DepreciationMethod.DepreciationMethodTitle</span>
+                                            </p>
+                                        </div><!-- col -->
+                                    }
+
+                                </div>
+                            </div><!-- media-body -->
+                        </div><!-- media -->
+                    </div><!-- card-body -->
+                    <div class="card-footer">
+
+                        <a href="javascript:void(0)" onclick="editButtonClick(@Model.Asset.AssetId)">@sharedResource["Edit Information"]</a>
+                        <a asp-area="Admin" asp-page="/PrintAssetProfile/PrintAsset" asp-route-AssetId="@Model.Asset.AssetId">@sharedResource["Print Asset"]</a>
+
+                        <div class="dropdown show">
+                            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @sharedResource["More Actions"]
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                @if (Model.Asset.AssetStatusId == 1)
+                                {
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="AssetCheckOutPopUp(@Model.Asset.AssetId)">@sharedResource["Check Out"]</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="ShowAssetSellPopUp()">@sharedResource["Asset Sell"] </a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="ShowAssetLeasingPopUp()">@sharedResource["lease Asset"] </a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="ShowDisposeAssetPopUp()">@sharedResource["Link Asset Dispose"]  </a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick=" AssetRepairPopUp(@Model.Asset.AssetId)">@sharedResource["Repair Asset"]</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="ShowAssetLostPopUp()">@sharedResource["Link Asset Lost"]  </a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="ShowAssetBrokenPopup()">@sharedResource["Link AssetBroken"]  </a>
+                                }
+                                else if (Model.Asset.AssetStatusId == 2)
+                                {
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="AssetCheckInPopUp(@Model.Asset.AssetId)">@sharedResource["Check In"]</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick=" AssetRepairPopUp(@Model.Asset.AssetId)">@sharedResource["Repair Asset"]</a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="ShowAssetLostPopUp()">@sharedResource["Link Asset Lost"]  </a>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="ShowAssetBrokenPopup()">@sharedResource["Link AssetBroken"]  </a>
+                                }
+                                else if (Model.Asset.AssetStatusId == 6)
+                                {
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="AssetCheckInPopUp(@Model.Asset.AssetId)">@sharedResource["Check In"]</a>
+
+                                }
+                                else if (Model.Asset.AssetStatusId == 3)
+                                {
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="AssetCheckInPopUp(@Model.Asset.AssetId)">@sharedResource["Check In"]</a>
+
+                                }
+                            </div>
+                        </div>
+                    </div><!-- card -->
+
+                    <div class="section-wrapper mg-t-20">
+                        <label class="slim-card-title">@sharedResource["LATEST ACTIVITY"]</label>
+                        @*<p class="mg-b-20 mg-sm-b-40">Add a tab navigation in header of a card.</p>*@
+
+                        <div class="row">
+                            <div class="col-md">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <ul class="nav nav-tabs card-header-tabs">
+                                            @*<li class="nav-item">
+                                                <a class="nav-link active" href="#Details" data-toggle="tab">@sharedResource["Details"]</a>
+                                            </li>*@
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#Events" data-toggle="tab">@sharedResource["Events"]</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#Photos" data-toggle="tab">@sharedResource["Photos"]</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#Docs" data-toggle="tab">@sharedResource["Docs"]</a>
+                                            </li>
+                                            @*<li class="nav-item">
+                                                <a class="nav-link" href="#Depreciation" data-toggle="tab">@sharedResource["Depreciation"]</a>
+                                            </li>*@
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#Warranty" data-toggle="tab">@sharedResource["Warranty"]</a>
+                                            </li>
+                                            @*<li class="nav-item">
+                                                <a class="nav-link" href="#Linking" data-toggle="tab">@sharedResource["Linking"]</a>
+                                            </li>*@
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#Maint" data-toggle="tab">@sharedResource["Maintenance"]</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#Contracts" data-toggle="tab">@sharedResource["Contracts"]</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#Insurances" data-toggle="tab">@sharedResource["Insurances"]</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#History" data-toggle="tab">@sharedResource["History"]</a>
+                                            </li>
+
+                                        </ul>
+                                    </div><!-- card-header -->
+                                    <div class="card-body">
+                                        <div class="tab-content">
+                                            @*<div class="tab-pane active" id="Details">
+                                                <partial name="_AssetDetailsTab" model=Model.Asset.AssetId />
+                                            </div> tab-pane*@ 
+                                            <div class="tab-pane" id="Events">
+                                                <partial name="_AssetEventTab" model=Model.Asset.AssetId />
+                                            </div><!-- tab-pane -->
+                                            <div class="tab-pane" id="Photos">
+                                                <partial name="_AssetPhotosTab" model=Model.Asset.AssetId />
+                                            </div><!-- tab-pane -->
+                                            <div class="tab-pane" id="Docs">
+                                                <partial name="_AssetDocsTab" model=Model.Asset.AssetId />
+                                            </div><!-- tab-pane -->
+                                            @*<div class="tab-pane" id="Depreciation">
+                                                <partial name="_AssetDepreciationTab" model=Model.Asset.AssetId />
+                                            </div> tab-pane*@ 
+                                            <div class="tab-pane" id="Warranty">
+                                                <partial name="_AssetWarrantyTab" model=Model.Asset.AssetId />
+                                            </div><!-- tab-pane -->
+                                            @*<div class="tab-pane" id="Linking">
+                                                <partial name="_AssetLinkingTab" model=Model.Asset.AssetId />
+                                            </div> tab-pane*@ 
+                                            <div class="tab-pane" id="Maint">
+                                                <partial name="_AssetMaintTab" model=Model.AssetMaintainance view-data="ViewData" />
+                                            </div><!-- tab-pane -->
+                                            <div class="tab-pane" id="Contracts">
+                                                <partial name="_AssetContractTab" model=Model.Asset.AssetId />
+                                            </div><!-- tab-pane -->
+                                            <div class="tab-pane" id="Insurances">
+                                                <partial name="_AssetInsuranceTab" model=Model.Asset.AssetId />
+                                            </div><!-- tab-pane -->
+                                            <div class="tab-pane" id="History">
+                                                <partial name="_AssetHistoryTab" model=Model.Asset.AssetId />
+                                            </div><!-- tab-pane -->
+                                        </div><!-- tab-content -->
+                                    </div><!-- card-body -->
+                                </div><!-- card -->
+                            </div><!-- col -->
+
+                        </div><!-- row -->
+                    </div>
+
+
+                </div><!-- col-8 -->
+
+
+            </div><!-- row -->
+
+        </div><!-- container -->
+    </div>
+
+    <partial name="_AssetEditPopup" model="@Model.asset" />
+    <partial name="_AssetCHeckOut" model=@Model.AssetMovementModel view-data=" ViewData" />
+    <partial name="_AssetRepair" model=@Model.AssetrepairModel />
+    <partial name="_AddAssetLostPopup" model=Model.Asset.AssetId />
+    <partial name="_DisposeAssetPopup" model=Model.Asset.AssetId />
+    <partial name="_AssetLeasingTab" model=Model.Asset.AssetId />
+    <partial name="_AssetSellTab" model=Model.Asset.AssetId />
+    <partial name="_AssetBroken" model=Model.Asset.AssetId />
+    <partial name="_AssetCheckInPopUp" model=@Model.AssetMovementModel />
+    <partial name="_EditMaintainancePopup" model=Model.AssetMaintainance view-data="ViewData" />
+
+</div><!-- card-footer -->
+<script>
+    function editButtonClick(AssetId) {
+        $.ajax({
+            type: "GET",
+            url: "/admin/assetmanagment/Index?handler=SingleAssetForEdit",
+            data: { "AssetId": AssetId },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                console.log(response)
+
+
+                document.getElementById("EditAssetDescriptiontxt").innerHTML = response.AssetTagId
+                document.getElementById("AtagId").value = response.AssetTagId
+                document.getElementById("AssetId").value = response.AssetId
+                document.getElementById("AssetphotoId").value = response.Photo
+                document.getElementById("AssetStatusId").value = response.AssetStatusId
+                document.getElementById("AssettenantId").value = response.TenantId
+                document.getElementById("Acost").value = response.AssetCost
+                document.getElementById("AserialNum").value = response.AssetSerialNo
+                document.getElementById("purchasenumber").value = response.PurchaseNo
+
+                console.log(DateFormat(response.AssetPurchaseDate))
+
+                document.getElementById("ApurshaseDate").value = DateFormat(response.AssetPurchaseDate)
+                $("#AItem").dxLookup("instance").option("value", response.ItemId);
+                $("#AStore").dxLookup("instance").option("value", response.StoreId);
+                $("#Avendor").dxLookup("instance").option("value", response.VendorId);
+                document.getElementById("ADescription").value = response.AssetDescription
+                document.getElementById("ADepreciable").value = response.DepreciableCost
+                document.getElementById("ASalvageValue").value = response.SalvageValue
+                document.getElementById("ALife").value = response.AssetLife
+
+                $("#ADepreciationMetod").dxLookup("instance").option("value", response.DepreciationMethodId);
+                const form = document.getElementById("depreciable")
+                var btn1 = document.getElementById("DA1");
+                var btn2 = document.getElementById("DA2");
+
+                if (response.DepreciableAsset) {
+                    console.log(response.DepreciableAsset)
+                    btn1.removeAttribute('checked');
+                    btn2.removeAttribute('checked');
+                    btn1.setAttribute('checked', 'checked');
+                    console.log(btn1)
+                    console.log(btn2)
+                    console.log(form)
+                    document.getElementById("AdateAcquired").value = DateFormat(response.DateAcquired)
+                    form.style.display = 'flex';
+
+                    console.log(response.DepreciableAsset)
+                }
+                else {
+                    console.log(response.DepreciableAsset)
+                    console.log(btn1)
+                    console.log(btn2)
+                    console.log(form)
+                    btn1.removeAttribute('checked');
+                    btn2.setAttribute('checked', 'checked');
+                    form.style.display = 'none';
+                    console.log(response.DepreciableAsset)
+                }
+                $('#AssetEditPoup').modal('show');
+
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+
+    function ShowAddAssetPhotoPopUp() {
+        $('#AssetPhotoPoup').modal('show');
+    }
+    function DeletePhoto(AssetId, AssetPhotoId) {
+        $.ajax({
+            type: "GET",
+            url: "/admin/assetmanagment/AssetProfile?handler=DeletePhoto",
+            data: { "AssetId": AssetId, "AssetPhotoId": AssetPhotoId },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                document.location = '/Admin/AssetManagment/AssetProfile?AssetId=' + response.AssetId;
+                document.getElementById("Deletephotot").innerHTML = "Photo Deleted Successfully";
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+
+
+    }
+
+    function ShowAssetcontractPopUp() {
+        $('#AssetContractEditPoup').modal('show');
+    }
+    function ShowAssetInsurancePopUp() {
+        $('#AssetInsuranceEditPoup').modal('show');
+    }
+
+    function ShowAssetDocumentPopup() {
+        $('#AssetDocumentEditPoup').modal('show');
+    }
+
+    function AssetCheckOutPopUp(AssetId) {
+        console.log("check out")
+        console.log(AssetId)
+        $('#AssetCheckOutPoup').modal('show');
+        console.log(document.getElementById("checkoutAssetIdField"))
+        document.getElementById("checkoutAssetIdField").value = AssetId;
+        console.log(document.getElementById("checkoutAssetIdField").value)
+
+    }
+
+
+    function AssetRepairPopUp(AssetId) {
+        $('#AssetRepairPoup').modal('show');
+        console.log(document.getElementById("RepairAssetIdField"))
+        document.getElementById("RepairAssetIdField").value = AssetId;
+        console.log(document.getElementById("RepairAssetIdField").value)
+
+    }
+
+    function ShowAssetLostPopUp() {
+        $('#AssetLostPoup').modal('show');
+    }
+
+    function ShowDisposeAssetPopUp() {
+        $('#DisposeAssetPoup').modal('show');
+    }
+
+    function ShowAssetLeasingPopUp() {
+        $('#AssetLeasingPoup').modal('show');
+    }
+    function ShowAssetSellPopUp() {
+        $('#AssetSellPoup').modal('show');
+    }
+
+    function ShowAssetBrokenPopup() {
+        $('#AssetBrokenPoup').modal('show');
+    }
+    function ShowAssetWarantyPopup() {
+        $('#AssetWarrantyPoup').modal('show');
+    }
+
+    function ShowAddAssetMiantainancePopUp(AssetId) {
+        console.log(AssetId)
+        $('#AssetMiantainancePoup').modal('show');
+        console.log(document.getElementById("MaintainanceAssetIdField"))
+        document.getElementById("MaintainanceAssetIdField").value = AssetId;
+        console.log(document.getElementById("MaintainanceAssetIdField").value)
+    }
+
+    function AssetCheckInPopUp(AssetId) {
+        console.log("check in")
+        console.log(AssetId)
+        $('#AssetCheckInPoup').modal('show');
+        console.log(document.getElementById("checkInAssetIdField"))
+        document.getElementById("checkInAssetIdField").value = AssetId;
+        console.log(document.getElementById("checkInAssetIdField").value)
+    }
+
+    function editMaintainance(id) {
+        $.ajax({
+            type: "GET",
+            url: "/admin/assetmanagment/AssetProfile?handler=EditMiantainance",
+            data: { "maintainanceId": id },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                console.log(response)
+                document.getElementById("maintTitle").value = response.AssetMaintainanceTitle
+                document.getElementById("maintDetail").value = response.AssetMaintainanceDetails
+                document.getElementById("maintSceduleDate").value = DateFormat(response.ScheduleDate)
+                document.getElementById("maintCost").value = response.AssetMaintainanceRepairesCost
+                document.getElementById("WeekPeriod").value = response.WeeklyPeriod
+                document.getElementById("MonthPeriod").value = response.MonthlyPeriod
+                document.getElementById("MonthDay").value = response.MonthlyDay
+                document.getElementById("YearDay").value = response.YearlyDay
+                console.log(document.getElementById("MaintAssetIdField"))
+                document.getElementById("MaintAssetIdField").value = response.AssetId;
+                document.getElementById("MaintId").value = response.AssetMaintainanceId;
+
+                console.log($("#TechLookup").dxLookup("instance"))
+                $("#TechLookup").dxLookup("instance").option("value", response.TechnicianId);
+                console.log($("#maintstatus").dxLookup("instance"))
+
+                $("#maintstatus").dxLookup("instance").option("value", response.MaintainanceStatusId);
+
+                console.log($("#MFreq").dxLookup("instance"))
+
+                $("#MFreq").dxLookup("instance").option("value", response.AssetMaintainanceFrequencyId);
+
+
+                $("#MonthLookup").dxLookup("instance").option("value", response.MonthId);
+                console.log("2")
+                $("#WeekDay").dxLookup("instance").option("value", response.WeekDayId);
+                console.log("3")
+                console.log("4")
+                console.log("5")
+                console.log("6")
+                console.log(new Date(response.ScheduleDate))
+                console.log(document.getElementById("maintSceduleDate").valueAsDate)
+                var freq = document.getElementById("MF")
+                var btn1 = document.getElementById("R");
+                var btn2 = document.getElementById("NR");
+                var MaintStatusValue = $("#maintstatus").dxLookup("instance").option("value");
+                console.log(MaintStatusValue)
+                if (MaintStatusValue == 5) {
+                    console.log(MaintStatusValue)
+                    document.getElementById("maintDateCompleted").value = DateFormat(response.AssetMaintainanceDateCompleted)
+
+                }
+                if (response.AssetMaintainanceRepeating) {
+                    btn1.removeAttribute('checked');
+                    btn2.removeAttribute('checked');
+                    btn1.setAttribute('checked', 'checked');
+                    console.log(btn1)
+                    console.log(btn2)
+                    console.log(freq)
+                    freq.style.display = 'block';
+                    var fequencyType = $("#MFreq").dxLookup("instance");
+                    var fequencyTypeValue = fequencyType.option("value");
+                    console.log(fequencyTypeValue)
+                    if (fequencyTypeValue != null) {
+                        if (fequencyTypeValue == 1) {
+                            console.log("Daily")
+                            document.getElementById("Weekly").style.display = 'none'
+                            document.getElementById("Monthly").style.display = 'none'
+                            document.getElementById("Yearly").style.display = 'none'
+                        }
+                        else if (fequencyTypeValue == 2) {
+                            console.log("Weekly")
+                            document.getElementById("Weekly").style.display = 'block'
+                            document.getElementById("Monthly").style.display = 'none'
+                            document.getElementById("Yearly").style.display = 'none'
+                        }
+                        else if (fequencyTypeValue == 3) {
+                            console.log("Monthly")
+                            document.getElementById("Weekly").style.display = 'none'
+                            document.getElementById("Monthly").style.display = 'block'
+                            document.getElementById("Yearly").style.display = 'none'
+                        }
+                        else if (fequencyTypeValue == 4) {
+                            console.log("Yearly")
+                            document.getElementById("Weekly").style.display = 'none'
+                            document.getElementById("Monthly").style.display = 'none'
+                            document.getElementById("Yearly").style.display = 'block'
+                        }
+                    }
+                }
+                else {
+                    btn1.removeAttribute('checked');
+                    btn2.setAttribute('checked', 'checked');
+                    console.log(freq)
+                    freq.style.display = 'none';
+                    document.getElementById("Weekly").style.display = 'none'
+                    document.getElementById("Monthly").style.display = 'none'
+                    document.getElementById("Yearly").style.display = 'none'
+                }
+                $('#EditAssetMiantainancePoup').modal('show');
+
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+    function DateFormat(incomingdate) {
+        var d = new Date(incomingdate),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+        var outcomingdate = [year, month, day].join('-');
+        return outcomingdate;
+    }
+</script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}

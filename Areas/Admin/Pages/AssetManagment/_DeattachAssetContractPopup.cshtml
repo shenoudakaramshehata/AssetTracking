@@ -1,0 +1,77 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div id="DeattacheAssetContractPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+    <form asp-area="Admin" asp-page="/AssetManagment/AssetProfile" asp-page-handler="DeattachAssetContract" asp-route-AssetId="@Model" enctype="multipart/form-data">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header pd-y-20 pd-x-25">
+                @*<h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="AssetDescriptiontxt"></h6>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body pd-25">
+                
+                    <input id="AssetContractIdFaild" name="AssetContractID" hidden  />
+                     <input  id="ContractIdFaildHidden" name="ContractId" class="form-control" hidden>
+                      <div class="row mg-b-25">
+                <div class="form-group">
+                    <label class="form-control-label">@sharedResource["Contract Title"] <span class="tx-danger"></span></label>
+                  <input id="ContractIdFaild"  class="form-control" readonly>
+                </div>
+              
+            </div><!-- row -->
+                
+                
+                
+               @* <input id="addetContractIdFaild" name="AseetContractId" />*@
+
+               @* @(Html.DevExtreme().Form<AssetProject.Models.AssetContract>()
+                    .ID("frmDeattachContract")
+                .ColCount(2).Width(300).Height(280)
+                .Items(items =>
+                {
+                    items.AddSimpleFor(c=>c.AssetContractID).Editor(e => e.TextBox().ReadOnly(true));
+                    items.AddSimpleFor(m => m.ContractId)
+                    .IsRequired(true)
+                    .Editor(e => e
+                    .Lookup()
+                    .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("ContractsLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text").Width(150).Disabled(true)
+                    );
+                })
+                )
+*@
+             
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">@sharedResource["Confirm"]</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">@sharedResource["Close"]</button>
+            </div>
+        </div>
+    </form>
+</div><!-- modal-dialog -->
+</div>
+
+<script>
+     function changephotoname() {
+         console.log("in photo")
+                var fileName = document.getElementById("Photo").value.split("\\").pop();;
+                    document.getElementById("photolabel").innerHTML=fileName;
+
+            }
+
+
+
+</script>

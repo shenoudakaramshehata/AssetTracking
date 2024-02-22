@@ -1,0 +1,132 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.SetUp.LocationTreeModel
+@{
+}
+
+
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["SETUP"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["LocationTree"] </li>
+
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["LocationList"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+            @*<label class="section-title d-inline">@sharedResource["LocationList"]</label>*@
+            <div class="table-wrapper">
+                <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                    @(Html.DevExtreme().TreeList<AssetProject.Models.Location>()
+        .ID("Locationtreeid")
+    .DataSource(ds => ds.Mvc()
+        .Controller("Locations")
+        .LoadAction("Get")
+        .InsertAction("Post")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("LocationId")
+    )
+                    .ColumnAutoWidth(true)
+                    .WordWrapEnabled(true)
+                     .ShowBorders(true)
+    .RootValue(null)
+    .KeyExpr("LocationId")
+    .ParentIdExpr("LocationParentId")
+     .SearchPanel(seachPanel => seachPanel.Visible(true).Placeholder(sharedResource["searching"]))
+    @*.RemoteOperations(o => o.Filtering(true).Grouping(true).Sorting(true))*@
+    .Columns(columns => {
+
+      @*  columns.AddFor(m => m.LocationId);*@
+
+      @*  columns.AddFor(m => m.LocationParentId).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("LocationsLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+*@
+    columns.AddFor(m => m.LocationTitle).Caption(@sharedResource["LocationTitle"]);
+    columns.AddFor(m => m.BarCode).Caption(@sharedResource["BarCode"]);
+    columns.AddFor(m => m.LocationLatitude).Caption(@sharedResource["Latitude"]);
+    columns.AddFor(m => m.LocationLangtiude).Caption(@sharedResource["Longitude"]);
+
+
+      @*  columns.AddFor(m => m.CountryId);
+
+        columns.AddFor(m => m.Address);
+
+        columns.AddFor(m => m.City);
+
+        columns.AddFor(m => m.State);
+
+        columns.AddFor(m => m.PostalCode);*@
+    })
+    .Columns(columns =>
+    {
+        columns.Add().Width(160).Alignment(HorizontalAlignment.Center).AllowEditing(false)
+.CellTemplate(@<text>
+  <a href="javascript:void(0)" onclick="ShowDeletePopUp('<%-data.LocationId%>')"> <i class="fa fa-trash"></i> </a>
+  </text>);
+    })
+    .Editing(e => e
+    //.Mode(GridEditMode.Popup)
+        .AllowAdding(true)
+        .AllowUpdating(true)
+        //.AllowDeleting(true).Texts(e => e.ConfirmDeleteMessage(sharedResource["Are you Sure to Delete?!"])).AllowUpdating(true)
+        .UseIcons(true)
+
+    //      .Popup(p => p
+    //            .Title("Location Info")
+    //            .ShowTitle(true)
+    //            .Width(500)
+    //            .Height(250)
+    //)
+    ).Selection(s => s.Mode(SelectionMode.Single))
+
+)
+                </div>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+<partial name="_DeleteLocationPopup"/>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+             if (localStorage.getItem("lang") == "ar") {
+                 console.log("In Page")
+                 
+                 dataGrid = $("#Locationtreeid").dxTreeList("instance");
+                 console.log(dataGrid)
+                 dataGrid.option("rtlEnabled", true);
+
+
+            }
+        }
+    });
+
+     function ShowDeletePopUp(id)
+    {
+        console.log(id)
+        $.ajax({
+            type: "GET",
+            url: "/admin/SetUp/LocationTree?handler=LocationforDelete",
+            data: { "locationid": id },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                document.getElementById("LocationIdField").value = response.LocationId;
+                document.getElementById("LocationTitleField").value = response.LocationTitle;
+                $('#DeletelocationPoup').modal('show');
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+</script>

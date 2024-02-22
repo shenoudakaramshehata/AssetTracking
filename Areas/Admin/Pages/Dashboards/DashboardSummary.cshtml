@@ -1,0 +1,589 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.Dashboards.DashboardSummaryModel
+@{
+}
+<div class="slim-mainpanel" style="position: relative;">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Dashboard"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Welcome back, Mohamed"]</h6>
+        </div><!-- slim-pageheader -->
+          
+        <div class="row row-xs">
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-status">
+                    <div class="media">
+                        <i class="icon ion-ios-cloud-download-outline tx-purple"></i>
+                        <div class="media-body">
+                            <h1>@Model.TotalAssetCount</h1>
+                            <p>@sharedResource["Total Assets"]</p>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-sm-t-0">
+                <div class="card card-status">
+                    <div class="media">
+                        <i class="icon ion-ios-bookmarks-outline tx-teal"></i>
+                        <div class="media-body">
+                            <h1>@Model.TotalAssetValue</h1>
+                            <p>@sharedResource["Total Asset Cost"]</p>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+                <div class="card card-status">
+                    <div class="media">
+                        <i class="icon ion-ios-cloud-upload-outline tx-primary"></i>
+                        <div class="media-body">
+                            <h1>@Model.TotalAssetActive</h1>
+                            <p>@sharedResource["Active"]</p>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+                <div class="card card-status">
+                    <div class="media">
+                        <i class="icon ion-ios-analytics-outline tx-pink"></i>
+                        <div class="media-body">
+                            <h1>@Model.TotalAssetAvaliable</h1>
+                            <p>@sharedResource["Available"]</p>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+        </div><!-- row -->
+        <div class="row row-xs mt-2">
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-status">
+                    <div class="media">
+                        <i class="icon ion-ios-cloud-download-outline tx-purple"></i>
+                        <div class="media-body">
+                            <h1>@Model.TotalAssetPurchaseCY</h1>
+                            <p>@sharedResource["Current Year Purchase"]</p>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-sm-t-0">
+                <div class="card card-status">
+                    <div class="media">
+                        <i class="icon ion-ios-bookmarks-outline tx-teal"></i>
+                        <div class="media-body">
+                            <h1>@Model.TotalAssetLinkWarrenty</h1>
+                            <p>@sharedResource["Asset Linked To Warrenty"]</p>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+                <div class="card card-status">
+                    <div class="media">
+                        <i class="icon ion-ios-cloud-upload-outline tx-primary"></i>
+                        <div class="media-body">
+                            <h1>@Model.TotalAssetLinkContract</h1>
+                            <p>@sharedResource["Asset Linked To Contract"]</p>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+                <div class="card card-status">
+                    <div class="media">
+                        <i class="icon ion-ios-analytics-outline tx-pink"></i>
+                        <div class="media-body">
+                            <h1>@Model.TotalAssetLinkInsurance</h1>
+                            <p>@sharedResource["Asset Link To Insurance"]</p>
+                        </div><!-- media-body -->
+                    </div><!-- media -->
+                </div><!-- card -->
+            </div><!-- col-3 -->
+        </div><!-- row -->
+ 
+           
+
+        
+       @* first*@
+          <div class="row row-xs mg-t-10">
+                    <div class="col-md-6 col-lg-6 col-xl-6 mg-t-10 mg-md-t-0">
+                        <div class="dash-headline-item-one">
+                       @(Html.DevExtreme().Chart()
+                                            .ID("AssetCountByStatus")
+                                            .Rotated(false)
+                                            .DataSource("/api/Statistics/GetAssetCountByStatus")
+                                            .Series(s => s.Add()
+                                            .Label(l => l
+                                            .Visible(true)
+                                            .BackgroundColor("#c18e92")
+
+                                            )
+                                            .Color("#79cac4")
+                                            .Type(SeriesType.Bar)
+                                            .ArgumentField("Name")
+                                            .ValueField("Count")
+                                            )
+
+                                            .Title(sharedResource["Assets Count Per Status"])
+                                            .ArgumentAxis(a => a
+                                            .Label(l => l
+                                            .CustomizeText(@<text>
+                                                    function() {
+                                                    return this.valueText;
+                                                    }
+                                                </text>)
+                                            )
+                                            )
+                                            .ValueAxis(a => a.Add()
+                                            .Tick(t => t.Visible(false))
+                                            .Label(l => l.Visible(false))
+                                            )
+                                            .Export(e => e.Enabled(true))
+                                            .Legend(l => l.Visible(false))
+                                            .ScrollBar(s => s.Visible(true))
+                                            .ZoomAndPan(z => z.ArgumentAxis(ChartZoomAndPanMode.Both))
+                             )
+                                                   </div><!-- dash-headline-item-one -->
+                    </div><!-- col-7 -->
+                    <div class="col-md-6 col-lg-6 col-xl-6 mg-t-10  mg-md-t-0 ">
+                        <div class="dash-headline-item-one">
+                            @(Html.DevExtreme().Chart()
+                                            .ID("AssetCostByStatusID")
+                                            .Rotated(false)
+                                            .DataSource("/api/Statistics/GetAssetCostByStatus")
+                                            .Series(s => s.Add()
+                                            .Label(l => l
+                                            .Visible(true)
+                                            .BackgroundColor("#c18e92")
+
+                                            )
+                                            .Color("#79cac4")
+                                            .Type(SeriesType.Bar)
+                                            .ArgumentField("Name")
+                                            .ValueField("Cost")
+                                            )
+                                            .Title(sharedResource["Assets Cost Per Status"])
+                                            .ArgumentAxis(a => a
+                                            .Label(l => l
+                                            .CustomizeText(@<text>
+                                                    function() {
+                                                    return this.valueText;
+                                                    }
+                                                </text>)
+                                            )
+                                            )
+                                            .ValueAxis(a => a.Add()
+                                            .Tick(t => t.Visible(false))
+                                            .Label(l => l.Visible(false))
+                                            )
+                                            .Export(e => e.Enabled(true))
+                                            .Legend(l => l.Visible(false))
+                                            .ScrollBar(s => s.Visible(true))
+                                            .ZoomAndPan(z => z.ArgumentAxis(ChartZoomAndPanMode.Both))
+                             )
+                        </div><!-- dash-headline-item-one -->
+                    </div><!-- col-7 -->
+           </div>
+      @*End*@
+    <div class="row row-xs mt-2 mb-2">
+        <div class="col-lg-3">
+            <div class="card card-sales"style="background: #dcfefa">
+                <h6 class="slim-card-title tx-primary">@sharedResource["Broken"]</h6>
+                <div class="row mb-0">
+                    <div class="col">
+                        <label class="tx-12">@sharedResource["Count"]</label>
+                        <p>@Model.TotalAssetBrocken</p>
+                    </div><!-- col -->
+                    <div class="col">
+                        <label class="tx-12">@sharedResource["Cost"]</label>
+                        <p>@Model.TotalAssetBrockenValue</p>
+                    </div><!-- col -->
+
+                </div><!-- row -->
+
+
+            </div><!-- card -->
+        </div><!-- col-4 -->
+        <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+            <div class="card card-sales"style="background: antiquewhite">
+                <h6 class="slim-card-title tx-success">@sharedResource["Sold"]</h6>
+                <div class="row  mb-0">
+                    <div class="col">
+                        <label class="tx-12">@sharedResource["Count"]</label>
+                        <p>@Model.TotalSellAsst</p>
+                    </div><!-- col -->
+                    <div class="col">
+                        <label class="tx-12">@sharedResource["Cost"]</label>
+                        <p>@Model.TotalSellAsstValue</p>
+                    </div><!-- col -->
+
+                </div><!-- row -->
+
+
+            </div><!-- card -->
+        </div><!-- col-4 -->
+        <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+            <div class="card card-sales"style="background: beige">
+                <h6 class="slim-card-title tx-danger">@sharedResource["Under Repair"]</h6>
+                <div class="row  mb-0">
+                    <div class="col">
+                        <label class="tx-12">@sharedResource["Count"]</label>
+                        <p>@Model.TotalAssetUnderRepair</p>
+                    </div><!-- col -->
+                    <div class="col">
+                        <label class="tx-12">@sharedResource["Cost"]</label>
+                        <p>@Model.TotalAssetUnderRepairCost</p>
+                    </div><!-- col -->
+
+                </div><!-- row -->
+
+
+            </div><!-- card -->
+        </div><!-- col-4 -->
+        <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+            <div class="card card-sales"style="background: #dbd2f7">
+                <h6 class="slim-card-title tx-warning">@sharedResource["Leased"]</h6>
+                <div class="row  mb-0">
+                    <div class="col">
+                        <label class="tx-12">@sharedResource["Count"]</label>
+                        <p>@Model.TotalAssetLeased</p>
+                    </div><!-- col -->
+                    <div class="col">
+                        <label class="tx-12">@sharedResource["Cost"]</label>
+                        <p>@Model.TotalLeasedAssetCost</p>
+                    </div><!-- col -->
+
+                </div><!-- row -->
+
+
+            </div><!-- card -->
+        </div><!-- col-4 -->
+    </div>
+       <div class="row row-xs mt-2 mb-2">
+          <div class="col-lg-3">
+            <div class="card card-sales"style="background: #dcfefa">
+              <h6 class="slim-card-title tx-primary">@sharedResource["Lost"]</h6>
+              <div class="row mb-0">
+                <div class="col">
+                  <label class="tx-12">@sharedResource["Count"]</label>
+                  <p>@Model.TotalAssetLost</p>
+                </div><!-- col -->
+                <div class="col">
+                  <label class="tx-12">@sharedResource["Cost"]</label>
+                  <p>@Model.TotalAssetLostCost</p>
+                </div><!-- col -->
+             
+              </div><!-- row -->
+
+            
+            </div><!-- card -->
+          </div><!-- col-4 -->
+          <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+            <div class="card card-sales"style="background: antiquewhite">
+              <h6 class="slim-card-title tx-success">@sharedResource["CheckOut"]</h6>
+              <div class="row  mb-0">
+                <div class="col">
+                  <label class="tx-12">@sharedResource["Count"]</label>
+                  <p>@Model.TotalAssetCheckOut</p>
+                </div><!-- col -->
+                <div class="col">
+                  <label class="tx-12">@sharedResource["Cost"]</label>
+                  <p>@Model.TotalAssetCheckOutCost</p>
+                </div><!-- col -->
+              
+              </div><!-- row -->
+
+             
+            </div><!-- card -->
+          </div><!-- col-4 -->
+          <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+            <div class="card card-sales"style="background: beige">
+              <h6 class="slim-card-title tx-danger">@sharedResource["Maintainance"]</h6>
+              <div class="row  mb-0">
+                <div class="col">
+                  <label class="tx-12">@sharedResource["Count"]</label>
+                  <p>@Model.TotalAssetMaint</p>
+                </div><!-- col -->
+                <div class="col">
+                  <label class="tx-12">@sharedResource["Cost"]</label>
+                  <p>@Model.TotalAssetMaintCost</p>
+                </div><!-- col -->
+               
+              </div><!-- row -->
+
+            
+            </div><!-- card -->
+          </div><!-- col-4 -->
+            <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+            <div class="card card-sales"style="background: #dbd2f7">
+              <h6 class="slim-card-title tx-warning">@sharedResource["Dispsed"]</h6>
+              <div class="row  mb-0">
+                <div class="col">
+                  <label class="tx-12">@sharedResource["Count"]</label>
+                  <p>@Model.TotalAssetDispose</p>
+                </div><!-- col -->
+                <div class="col">
+                  <label class="tx-12">@sharedResource["Cost"]</label>
+                  <p>@Model.TotalAssetDisposeCost</p>
+                </div><!-- col -->
+               
+              </div><!-- row -->
+
+            
+            </div><!-- card -->
+          </div><!-- col-4 -->
+        </div>
+         @* first*@
+          <div class="row row-xs mg-t-10">
+                    <div class="col-md-6 col-lg-6 col-xl-6 mg-t-10 mg-md-t-0">
+                        <div class="dash-headline-item-one">
+                         @(Html.DevExtreme().Chart()
+                                            .ID("AssetCountByDepartment")
+                                            .Rotated(false)
+                                            .DataSource("/api/Statistics/GetAssetCountByDepartment")
+                                            .Series(s => s.Add()
+                                            .Label(l => l
+                                            .Visible(true)
+                                            .BackgroundColor("#c18e92")
+
+                                            )
+                                            .Color("#79cac4")
+                                            .Type(SeriesType.Bar)
+                                            .ArgumentField("Name")
+                                            .ValueField("Count")
+                                            )
+                                            .Title(sharedResource["Assets Count Per Department"])
+                                            .ArgumentAxis(a => a
+                                            .Label(l => l
+                                            .CustomizeText(@<text>
+                                                    function() {
+                                                    return this.valueText;
+                                                    }
+                                                </text>)
+                                            )
+                                            )
+                                            .ValueAxis(a => a.Add()
+                                            .Tick(t => t.Visible(false))
+                                            .Label(l => l.Visible(false))
+                                            )
+                                            .Export(e => e.Enabled(true))
+                                            .Legend(l => l.Visible(false))
+                                            .ScrollBar(s => s.Visible(true))
+                                            .ZoomAndPan(z => z.ArgumentAxis(ChartZoomAndPanMode.Both))
+                                            )
+                           
+                        </div><!-- dash-headline-item-one -->
+                    </div><!-- col-7 -->
+                    <div class="col-md-6 col-lg-6 col-xl-6 mg-t-10  mg-md-t-0 ">
+                        <div class="dash-headline-item-one">
+                             @(Html.DevExtreme().Chart()
+                                            .ID("AssetCostByDepartment")
+                                            .Rotated(false)
+                                            .DataSource("/api/Statistics/GetAssetCostByDepartment")
+                                            .Series(s => s.Add()
+                                            .Label(l => l
+                                            .Visible(true)
+                                            .BackgroundColor("#c18e92")
+
+                                            )
+                                            .Color("#79cac4")
+                                            .Type(SeriesType.Bar)
+                                            .ArgumentField("Name")
+                                            .ValueField("Cost")
+                                            )
+                                            .Title(sharedResource["Assets Cost Per Department"])
+                                            .ArgumentAxis(a => a
+                                            .Label(l => l
+                                            .CustomizeText(@<text>
+                                                    function() {
+                                                    return this.valueText;
+                                                    }
+                                                </text>)
+                                            )
+                                            )
+                                            .ValueAxis(a => a.Add()
+                                            .Tick(t => t.Visible(false))
+                                            .Label(l => l.Visible(false))
+                                            )
+                                            .Export(e => e.Enabled(true))
+                                            .Legend(l => l.Visible(false))
+                                            .ScrollBar(s => s.Visible(true))
+                                            .ZoomAndPan(z => z.ArgumentAxis(ChartZoomAndPanMode.Both))
+                                            )
+                          
+                        </div><!-- dash-headline-item-one -->
+                    </div><!-- col-7 -->
+           </div>
+        @*End*@
+            @* first*@
+          <div class="row row-xs mg-t-10">
+                    <div class="col-md-6 col-lg-6 col-xl-6 mg-t-10 mg-md-t-0">
+                        <div class="dash-headline-item-one">
+                       @(Html.DevExtreme().Chart()
+                                            .ID("AssetCountByCategory")
+                                            .Rotated(false)
+                                            .DataSource("/api/Statistics/GetAssetCountsPerCategory")
+                                            .Series(s => s.Add()
+                                            .Label(l => l
+                                            .Visible(true)
+                                            .BackgroundColor("#c18e92")
+
+                                            )
+                                            .Color("#79cac4")
+                                            .Type(SeriesType.Bar)
+                                            .ArgumentField("Name")
+                                            .ValueField("Count")
+                                            )
+                                            .Title(sharedResource["Assets Count Per Category"])
+                                            .ArgumentAxis(a => a
+                                            .Label(l => l
+                                            .CustomizeText(@<text>
+                                                    function() {
+                                                    return this.valueText;
+                                                    }
+                                                </text>)
+                                            )
+                                            )
+                                            .ValueAxis(a => a.Add()
+                                            .Tick(t => t.Visible(false))
+                                            .Label(l => l.Visible(false))
+                                            )
+                                            .Export(e => e.Enabled(true))
+                                            .Legend(l => l.Visible(false))
+                                            .ScrollBar(s => s.Visible(true))
+                                            .ZoomAndPan(z => z.ArgumentAxis(ChartZoomAndPanMode.Both))
+                                            )
+                                                    </div><!-- dash-headline-item-one -->
+                    </div><!-- col-7 -->
+                    <div class="col-md-6 col-lg-6 col-xl-6 mg-t-10  mg-md-t-0 ">
+                        <div class="dash-headline-item-one">
+                            @(Html.DevExtreme().Chart()
+                                            .ID("AssetCostByCategory")
+                                            .Rotated(false)
+                                            .DataSource("/api/Statistics/GetAssetCostByCategory")
+                                            .Series(s => s.Add()
+                                            .Label(l => l
+                                            .Visible(true)
+                                            .BackgroundColor("#c18e92")
+
+                                            )
+                                            .Color("#79cac4")
+                                            .Type(SeriesType.Bar)
+                                            .ArgumentField("Name")
+                                            .ValueField("Cost")
+                                            )
+                                            .Title(sharedResource["Assets Cost Per Category"])
+                                            .ArgumentAxis(a => a
+                                            .Label(l => l
+                                            .CustomizeText(@<text>
+                                                    function() {
+                                                    return this.valueText;
+                                                    }
+                                                </text>)
+                                            )
+                                            )
+                                            .ValueAxis(a => a.Add()
+                                            .Tick(t => t.Visible(false))
+                                            .Label(l => l.Visible(false))
+                                            )
+                                            .Export(e => e.Enabled(true))
+                                            .Legend(l => l.Visible(false))
+                                            .ScrollBar(s => s.Visible(true))
+                                            .ZoomAndPan(z => z.ArgumentAxis(ChartZoomAndPanMode.Both))
+                                            )
+                        </div><!-- dash-headline-item-one -->
+                    </div><!-- col-7 -->
+           </div>
+      @*End*@
+
+           @* first*@
+          <div class="row row-xs mg-t-10">
+                    <div class="col-md-6 col-lg-6 col-xl-6 mg-t-10 mg-md-t-0">
+                        <div class="dash-headline-item-one">
+                        @(Html.DevExtreme().Chart()
+                                            .ID("AssetCountByLocation")
+                                            .Rotated(false)
+                                            .DataSource("/api/Statistics/GetAssetCountByLocation")
+                                            .Series(s => s.Add()
+                                            .Label(l => l
+                                            .Visible(true)
+                                            .BackgroundColor("#c18e92")
+
+                                            )
+                                            .Color("#79cac4")
+                                            .Type(SeriesType.Bar)
+                                            .ArgumentField("Name")
+                                            .ValueField("Count")
+                                            )
+                                            .Title(sharedResource["Assets Count Per Location"])
+                                            .ArgumentAxis(a => a
+                                            .Label(l => l
+                                            .CustomizeText(@<text>
+                                                    function() {
+                                                    return this.valueText;
+                                                    }
+                                                </text>)
+                                            )
+                                            )
+                                            .ValueAxis(a => a.Add()
+                                            .Tick(t => t.Visible(false))
+                                            .Label(l => l.Visible(false))
+                                            )
+                                            .Export(e => e.Enabled(true))
+                                            .Legend(l => l.Visible(false))
+                                            .ScrollBar(s => s.Visible(true))
+                                            .ZoomAndPan(z => z.ArgumentAxis(ChartZoomAndPanMode.Both))
+                                            )
+                            
+                         </div><!-- dash-headline-item-one -->
+                    </div><!-- col-7 -->
+                    <div class="col-md-6 col-lg-6 col-xl-6 mg-t-10  mg-md-t-0 ">
+                        <div class="dash-headline-item-one">
+                           @(Html.DevExtreme().Chart()
+                                            .ID("AssetCostByLocation")
+                                            .Rotated(false)
+                                            .DataSource("/api/Statistics/GetAssetCostByLocation")
+                                            .Series(s => s.Add()
+                                            .Label(l => l
+                                            .Visible(true)
+                                            .BackgroundColor("#c18e92")
+
+                                            )
+                                            .Color("#79cac4")
+                                            .Type(SeriesType.Bar)
+                                            .ArgumentField("Name")
+                                            .ValueField("Cost")
+                                            )
+                                            .Title(sharedResource["Assets Cost Per Location"])
+                                            .ArgumentAxis(a => a
+                                            .Label(l => l
+                                            .CustomizeText(@<text>
+                                                    function() {
+                                                    return this.valueText;
+                                                    }
+                                                </text>)
+                                            )
+                                            )
+                                            .ValueAxis(a => a.Add()
+                                            .Tick(t => t.Visible(false))
+                                            .Label(l => l.Visible(false))
+                                            )
+                                            .Export(e => e.Enabled(true))
+                                            .Legend(l => l.Visible(false))
+                                            .ScrollBar(s => s.Visible(true))
+                                            .ZoomAndPan(z => z.ArgumentAxis(ChartZoomAndPanMode.Both))
+                                            )
+                            
+                        </div><!-- dash-headline-item-one -->
+                    </div><!-- col-7 -->
+           </div>
+        @*End*@
+ 
+      
+    </div><!-- container -->
+    <div class="resize-sensor" style="position: absolute; inset: 0px; overflow: hidden; z-index: -1; visibility: hidden;"><div class="resize-sensor-expand" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0px; top: 0px; transition: all 0s ease 0s; width: 100000px; height: 100000px;"></div></div><div class="resize-sensor-shrink" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;"><div style="position: absolute; left: 0; top: 0; transition: 0s; width: 200%; height: 200%"></div></div></div>
+</div>

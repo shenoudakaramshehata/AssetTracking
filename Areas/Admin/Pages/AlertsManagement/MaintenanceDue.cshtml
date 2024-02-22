@@ -1,0 +1,214 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AlertsManagement.MaintenanceDueModel
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Alerts"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Maintenance Due"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Asset Maintenance List"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+            @*<label class="section-title d-inline">@sharedResource["InsurancePolicyList"]</label>*@
+            @*<a asp-area="Admin" asp-page="/InsuranceManagement/AddInsurance" class="btn btn-primary" style="float:right">@sharedResource["AddNewInsurance"] </a>*@
+            @*<p class="mg-b-20 mg-sm-b-40">Searching, ordering and paging goodness will be immediately added to the table, as shown in this example.</p>*@
+            <div class="table-wrapper">
+                <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                    @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetMaintainance>()
+        .ID("MaintDueid")
+.DataSource(ds => ds.Mvc()
+.Controller("Alerts")
+.LoadAction("GetMaintenanceDue")
+.Key("AssetMaintainanceId")
+)
+.ColumnAutoWidth(true)
+.WordWrapEnabled(true)
+.ShowBorders(true)
+.RemoteOperations(true)
+.ShowBorders(true)
+ .Paging(p => p.PageSize(10))
+    .Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 40, 80 }))
+    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+    .FilterRow(filterRow => filterRow
+     .Visible(true)
+     .ApplyFilter(GridApplyFilterMode.Auto)
+    )
+      .HeaderFilter(headerFilter => headerFilter.Visible(true))
+.Columns(columns =>
+{
+
+            @*columns.Add().Caption("Actions").Caption(@sharedResource["Actions"]).Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                <a href="/Admin/InsuranceManagement/DetailsInsurance?id=<%- data.InsuranceId %>"> @sharedResource["Details"] </a>
+            </text>).Width(150);*@
+
+columns.AddFor(m => m.Asset.Photo).Caption(sharedResource["Photo"]).Width(100)
+                  .AllowFiltering(false)
+                  .AllowSorting(false)
+                  .CellTemplate(@<text>
+                            <div>
+                                <img src="/<%- value %>" alt="" width="35" height="35" />
+                            </div>
+                        </text>);
+columns.AddFor(m => m.Asset.AssetTagId).Caption(@sharedResource["Asset TagId"]);
+columns.AddFor(m => m.AssetMaintainanceTitle).Caption(@sharedResource["Maintainance Title"]);
+
+columns.AddFor(m => m.ScheduleDate).Caption(@sharedResource["Schedule Date"]);
+
+
+columns.AddFor(m => m.Technician.TechnicianId).Caption(sharedResource["Technician"]).Lookup(lookup => lookup
+                .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("TechniciansLookup").Key("Value"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+            );
+columns.AddFor(m => m.AssetMaintainanceId).Visible(false);
+columns.Add().Caption(@sharedResource["Actions"]).Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+        <a href="javascript:void(0)" onclick="editMaintainance('<%- data.AssetMaintainanceId %>')"> @sharedResource["Edit"] </a>
+           </text>).Width(150);
+})
+            );
+
+                </div>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+<partial name="_EditMaintAlert" model=Model.AssetMaintainance />
+<script>
+    function editMaintainance(id) {
+        $.ajax({
+            type: "GET",
+            url: "/admin/assetmanagment/AssetProfile?handler=EditMiantainance",
+            data: { "maintainanceId": id },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                console.log(response)
+                document.getElementById("maintTitle").value = response.AssetMaintainanceTitle
+                document.getElementById("maintDetail").value = response.AssetMaintainanceDetails
+                document.getElementById("maintSceduleDate").value = DateFormat(response.ScheduleDate)
+                document.getElementById("maintCost").value = response.AssetMaintainanceRepairesCost
+                document.getElementById("WeekPeriod").value = response.WeeklyPeriod
+                document.getElementById("MonthPeriod").value = response.MonthlyPeriod
+                document.getElementById("MonthDay").value = response.MonthlyDay
+                document.getElementById("YearDay").value = response.YearlyDay
+                console.log(document.getElementById("MaintAssetIdField"))
+                document.getElementById("MaintAssetIdField").value = response.AssetId;
+                document.getElementById("MaintId").value = response.AssetMaintainanceId;
+
+                console.log($("#TechLookup").dxLookup("instance"))
+                $("#TechLookup").dxLookup("instance").option("value", response.TechnicianId);
+                console.log($("#maintstatus").dxLookup("instance"))
+
+                $("#maintstatus").dxLookup("instance").option("value", response.MaintainanceStatusId);
+
+                console.log($("#MFreq").dxLookup("instance"))
+
+                $("#MFreq").dxLookup("instance").option("value", response.AssetMaintainanceFrequencyId);
+
+
+                $("#MonthLookup").dxLookup("instance").option("value", response.MonthId);
+                console.log("2")
+                $("#WeekDay").dxLookup("instance").option("value", response.WeekDayId);
+                console.log("3")
+                console.log("4")
+                console.log("5")
+                console.log("6")
+                var freq = document.getElementById("MF")
+                var btn1 = document.getElementById("R");
+                var btn2 = document.getElementById("NR");
+                var MaintStatusValue = $("#maintstatus").dxLookup("instance").option("value");
+                console.log(MaintStatusValue)
+                if (MaintStatusValue == 5) {
+
+                    console.log(MaintStatusValue)
+                    document.getElementById("maintDateCompleted").value = DateFormat(response.AssetMaintainanceDateCompleted)
+
+                }
+
+                if (response.AssetMaintainanceRepeating) {
+                    btn1.removeAttribute('checked');
+                    btn2.removeAttribute('checked');
+                    btn1.setAttribute('checked', 'checked');
+                    console.log(btn1)
+                    console.log(btn2)
+                    console.log(freq)
+                    freq.style.display = 'block';
+                    var fequencyType = $("#MFreq").dxLookup("instance");
+                    var fequencyTypeValue = fequencyType.option("value");
+                    console.log(fequencyTypeValue)
+                    if (fequencyTypeValue != null) {
+                        if (fequencyTypeValue == 1) {
+                            console.log("Daily")
+                            document.getElementById("Weekly").style.display = 'none'
+                            document.getElementById("Monthly").style.display = 'none'
+                            document.getElementById("Yearly").style.display = 'none'
+                        }
+                        else if (fequencyTypeValue == 2) {
+                            console.log("Weekly")
+                            document.getElementById("Weekly").style.display = 'block'
+                            document.getElementById("Monthly").style.display = 'none'
+                            document.getElementById("Yearly").style.display = 'none'
+                        }
+                        else if (fequencyTypeValue == 3) {
+                            console.log("Monthly")
+                            document.getElementById("Weekly").style.display = 'none'
+                            document.getElementById("Monthly").style.display = 'block'
+                            document.getElementById("Yearly").style.display = 'none'
+                        }
+                        else if (fequencyTypeValue == 4) {
+                            console.log("Yearly")
+                            document.getElementById("Weekly").style.display = 'none'
+                            document.getElementById("Monthly").style.display = 'none'
+                            document.getElementById("Yearly").style.display = 'block'
+                        }
+                    }
+
+                }
+                else {
+                    btn1.removeAttribute('checked');
+                    btn2.setAttribute('checked', 'checked');
+                    console.log(freq)
+                    freq.style.display = 'none';
+                    document.getElementById("Weekly").style.display = 'none'
+                    document.getElementById("Monthly").style.display = 'none'
+                    document.getElementById("Yearly").style.display = 'none'
+                }
+                $('#EditAssetMiantainancePoup').modal('show');
+
+            },
+            failure: function (response) {
+                alert(response);
+            }
+        });
+    }
+
+    function DateFormat(incomingdate) {
+        var d = new Date(incomingdate),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+        var outcomingdate = [year, month, day].join('-');
+        return outcomingdate;
+    }
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+            if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                dataGrid = $("#MaintDueid").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+
+    
+</script>

@@ -1,0 +1,70 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div id="DisposeAssetPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+        <form asp-area="Admin" asp-page="/AssetManagment/AssetProfile" asp-page-handler="AddDisposeAsset" asp-route-AssetId="@Model" enctype="multipart/form-data">
+            <div class="modal-content bd-0 tx-14">
+                <div class="modal-header pd-y-20 pd-x-25">
+                    @*<h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="AssetDescriptiontxt"></h6>*@
+                    <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-25">
+                    @(Html.DevExtreme().Form<AssetProject.Models.DisposeAsset>()
+                .ID("DisposeAssetAdd")
+                .ColCount(1)
+
+                .Items(items => {
+                    //items.AddSimpleFor(m => m.AssetId).Editor(e => e.TextBox().ReadOnly(true));
+                    items.AddSimpleFor(m => m.DateDisposed).IsRequired(true).Label(l => l.Text(sharedResource["Date Disposed"]));
+                    items.AddSimpleFor(m => m.DisposeTo).IsRequired(true).Label(l => l.Text(sharedResource["Dispose To"]));
+                    items.AddSimpleFor(m => m.Notes).IsRequired(true).Editor(e => e.TextArea()).Label(l => l.Text(sharedResource["Notes"]));
+    items.AddGroup().ColCount(2)
+                       .Items(groupItems =>
+                       {
+                           groupItems.AddButton()
+                                           .HorizontalAlignment(HorizontalAlignment.Center)
+                                           .ButtonOptions(b => b.Text(@sharedResource["Save"])
+                                               .Type(ButtonType.Default)
+                                               .UseSubmitBehavior(true)
+                                       );
+                           groupItems.AddButton()
+                                           .HorizontalAlignment(HorizontalAlignment.Center)
+                                           .ButtonOptions(b => b.Text(sharedResource["Cancel"]).ElementAttr("data-dismiss", "modal")
+
+                        @*.UseSubmitBehavior(true)*@
+                );
+
+                       });
+
+                })
+                )
+
+
+                </div>
+            </div>
+        </form>
+    </div><!-- modal-dialog -->
+</div>
+
+<script>
+    function changephotoname() {
+        console.log("in photo")
+        var fileName = document.getElementById("Photo").value.split("\\").pop();;
+        document.getElementById("photolabel").innerHTML = fileName;
+
+    }
+
+
+
+</script>

@@ -1,0 +1,79 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.StoreManagment.CreateModel
+@{
+
+}
+
+
+
+<hr />
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Inventory"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Add Store"] </li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Store Information"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+            <label class="section-title">@sharedResource["Please fill Store information"]</label>
+
+            <div class="form-layout">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Store Title"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.StoreTitle" class="form-control" placeholder="@sharedResource["Enter Store Title"]" />
+                                <span asp-validation-for="Store.StoreTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Store Address"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.Address" class="form-control" placeholder="@sharedResource["Enter Store Address"]" />
+                                <span asp-validation-for="Store.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Telephone Number"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.Tele" class="form-control" placeholder="@sharedResource["Enter Telephone Number"]" />
+                                <span asp-validation-for="Store.Tele" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Mobile Number"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.Mobile" class="form-control" placeholder="@sharedResource["Enter Mobile Number"]" />
+                                <span asp-validation-for="Store.Mobile" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Fax"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Store.Fax" class="form-control" placeholder="@sharedResource["Enter Fax"]" />
+                                <span asp-validation-for="Store.Fax" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="@sharedResource["Add New Store"]" class="btn btn-primary" />
+                        <a asp-page="list" class="btn btn-secondary">@sharedResource["Back to List"]</a>
+
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+
+        
+    </div><!-- container -->
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,159 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.ContractManagment.DetailsContractModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+
+@{
+}
+
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["SETUP"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Contract Details"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Contract Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+            @* <label class="section-title">Please fill your company information</label>*@
+            @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
+
+            <div class="form-layout">
+                <div class="row mg-b-25">
+                    <div class="col-lg-4">
+                        <label >@sharedResource["Contact Title"]: <span class="tx-danger">*</span></label>
+                        <div style="font-size:xx-large">@Model.Contract.Title</div>
+                    </div><!-- col-4 -->
+
+                    <div class="col-lg-4">
+                        <label >@sharedResource["Description"]: <span class="tx-danger">*</span></label>
+                        <div style="font-size:xx-large">@Model.Contract.Description</div>
+                    </div><!-- col-4 -->
+
+
+                    <div class="col-lg-4">
+                        <label>@sharedResource["Contract No"]: <span class="tx-danger">*</span></label>
+                        <div style="font-size:xx-large">@Model.Contract.ContractNo</div>
+                    </div><!-- col-4 -->
+
+
+                    <div class="col-lg-4">
+                        <label class="form-control-label">@sharedResource["Cost"]: <span class="tx-danger">*</span></label>
+                        <div style="font-size:xx-large">@Model.Contract.Cost</div>
+                    </div><!-- col-4 -->
+
+                    <div class="col-lg-4">
+                        <label class="form-control-label">@sharedResource["Start Date"]: <span class="tx-danger">*</span></label>
+                        <div style="font-size:xx-large">@Model.Contract.StartDate.ToShortDateString()</div>
+                    </div><!-- col-4 -->
+
+
+                    <div class="col-lg-4">
+                        <label class="form-control-label">@sharedResource["End Date"]: <span class="tx-danger">*</span></label>
+                        <div style="font-size:xx-large">@Model.Contract.EndDate.ToShortDateString()</div>
+                    </div><!-- col-4 -->
+
+                    <div class="col-lg-4">
+                        <label class="form-control-label">@sharedResource["Vendor"]: <span class="tx-danger">*</span></label>
+                        <div style="font-size:xx-large">@Model.VendorName</div>
+                    </div><!-- col-4 -->
+
+
+                </div><!-- row -->
+
+
+                <label class="section-title d-inline mb-4 mt-4">@sharedResource["ASSETS"]</label>
+
+                <script>
+    function grid_dataSource_beforeSend(op, ajax) {
+        ajax.headers = {
+            RequestVerificationToken: "@Xsrf.GetAndStoreTokens(Model.HttpContext).RequestToken"
+        };
+    }
+                </script>
+
+                @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetContract>()
+                    .ID("grid-container")
+.DataSource(ds => ds.RemoteController()
+.LoadUrl(Url.Page("DetailsContract", "GridData"))
+.LoadParams(new { ContractId = Model.Contract.ContractId })
+)
+.RemoteOperations(true)
+    .ShowBorders(true)
+    .Paging(p => p.PageSize(10))
+    .Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 40, 80 }))
+    .SearchPanel(s => s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+    .FilterRow(filterRow => filterRow
+    .Visible(true)
+    .ApplyFilter(GridApplyFilterMode.Auto)
+    )
+    .HeaderFilter(headerFilter => headerFilter.Visible(true))
+.Columns(columns =>
+{
+
+columns.AddFor(m => m.Asset.Photo).Caption(sharedResource["Photo"]).Width(100)
+    .AllowFiltering(false)
+    .AllowSorting(false)
+    .CellTemplate(@<text>
+                            <div>
+                                <img src="/<%- value %>" alt="" width="35" height="35" />
+                            </div>
+                        </text>);
+        columns.AddFor(m => m.Asset.AssetTagId).Caption(sharedResource["Asset TagId"]);
+                    columns.AddFor(m => m.Asset.AssetCost).Caption(sharedResource["AssetCost"]);
+        columns.AddFor(m => m.Asset.AssetSerialNo).Caption(sharedResource["AssetSerialNo"]);
+        columns.AddFor(m => m.Asset.AssetPurchaseDate).Caption(sharedResource["Purchase Date"]);
+
+
+        columns.AddFor(m => m.Asset.ItemId).Caption(sharedResource["Item"]).Lookup(lookup => lookup
+        .DataSource(ds => ds.WebApi().Controller("Assets").LoadAction("ItemsLookup").Key("Value"))
+        .ValueExpr("Value")
+        .DisplayExpr("Text")
+        );
+
+
+
+        //columns.AddFor(m => m.ContractId).Lookup(lookup => lookup
+        //    .DataSource(ds => ds.WebApi().Controller("AssetContracts").LoadAction("ContractsLookup").Key("Value"))
+        //    .ValueExpr("Value")
+        //    .DisplayExpr("Text")
+        //);
+    })
+
+                        )
+
+                <div class="form-layout-footer mt-4">
+                    <a asp-area="Admin" asp-page="/ContractManagment/ContractList">
+                        <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Back to List"]' />
+                    </a>
+                </div><!-- form-layout-footer -->
+
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+
+    </script>
+}
+<script>
+     window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+             if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                 dataGrid = $("#grid-container").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+</script>

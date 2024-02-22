@@ -1,0 +1,70 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = "~/Pages/Shared/Admin/_AdminLayoutSlimEmpty.cshtml";
+}
+
+<div class="d-md-flex flex-row-reverse">
+    <div class="signin-right">
+       
+        <div class="signin-box">
+
+            <form id="account" method="post">
+              
+                 <h2 class="signin-title-primary">@sharedResource["Welcome back"]!</h2>
+                 <h3 class="signin-title-secondary">@sharedResource["Sign in to continue"].</h3>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <input asp-for="Input.Email" class="form-control" placeholder="@sharedResource["Enter your email"]"/>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                   
+                    <input asp-for="Input.Password" class="form-control" placeholder="@sharedResource["Enter your password"]" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label @*asp-for="Input.RememberMe"*@>@sharedResource["Remember Me"]
+                            <input asp-for="Input.RememberMe" />
+                            @*@Html.DisplayNameFor(m => m.Input.RememberMe)*@
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block btn-signin">@sharedResource["Sign In"]</button>
+                </div>
+                <p class="mg-b-0">@sharedResource["Don't have an account"]? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">@sharedResource["Sign Up"]</a></p>
+                <div class="form-group">
+                    <p>
+                        <a id="forgot-password" asp-page="./ForgotPassword">@sharedResource["Forgot your password"]?</a>
+                    </p>
+                    </div>
+                   @* <p>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                    </p>
+                    <p>
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                    </p>
+                </div>*@
+            </form>
+      </div>
+    </div>
+  
+    <div class="signin-left">
+        <div class="signin-box">
+            <h2 class="slim-logo"><a href="index.html">slim<span>.</span></a></h2>
+
+            <p>@sharedResource["slim paragraph"].</p>
+
+            <p class="tx-12">&copy; @sharedResource["Copyright 2022. All Rights Reserved"].</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

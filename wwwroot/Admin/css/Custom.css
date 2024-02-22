@@ -1,0 +1,16 @@
+﻿.dx-field-item-help-text, .dx-field-item-label-text {
+    color: #868ba1 !important;
+}
+
+.AlertMenuItem {
+    background-color: #1b84e7;
+    color: #fff;
+    border-radius: 100%;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    float: right;
+}

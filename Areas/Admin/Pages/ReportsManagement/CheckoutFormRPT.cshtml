@@ -1,0 +1,41 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.ReportsManagement.CheckoutFormRPTModel
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                    <li class="breadcrumb-item"><a href="#">@sharedResource["Reports"]</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@sharedResource["Asset Check Out Report"]</li>
+                </ol>
+                <h6 class="slim-pagetitle">@sharedResource["Asset Check Out"]</h6>
+        </div><!-- slim-pageheader -->
+
+
+
+        <div class="row row-sm row-timeline">
+         
+            <div class="col-lg-9">
+
+                <div class="card pd-30">
+                    <div class="timeline-group">
+                        @using AssetProject.Reports
+
+                        <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+
+                        <script src="~/js/viewer.part.bundle.js"></script>
+
+                        @Html.DevExpress().WebDocumentViewer("DocumentViewer").Height("1000px").Bind(Model.Report)
+                    </div><!-- timeline-group -->
+                </div><!-- card -->
+
+            </div><!-- col-9 -->
+            <!-- col-3 -->
+        </div><!-- row -->
+
+    
+
+    </div><!-- container -->
+</div>

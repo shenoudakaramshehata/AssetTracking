@@ -1,0 +1,181 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.PurchaseManagement.NewPurchaseModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+
+@{
+}
+<div class="slim-mainpanel">
+      <div class="container">
+        <div class="slim-pageheader">
+          <ol class="breadcrumb slim-breadcrumb">
+            <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+            <li class="breadcrumb-item"><a href="#">@sharedResource["Forms"]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@sharedResource["Form Layouts"]</li>
+          </ol>
+          <h6 class="slim-pagetitle">@sharedResource["Purchase Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+
+            <label class="section-title">@sharedResource["Please fill your Purchase information"]</label>
+          <div class="form-layout">
+                <form  method="post" enctype="multipart/form-data" >
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Purchase Date"] : <span class="tx-danger">*</span></label>
+                                <input asp-for="@Model.purchase.Purchasedate" class="form-control date" type="date">
+                                <span asp-validation-for="@Model.purchase.Purchasedate" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Brand"]: <span class="tx-danger">*</span></label>
+
+                                @(Html.DevExtreme().LookupFor(c=>c.purchase.VendorId)
+            .DataSource(d => d.WebApi()
+                .Controller("Lookups")
+                .LoadAction("VendorsLookup")
+                .Key("Value")
+            )
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+            .ShowClearButton(true)
+        )
+                                <span asp-validation-for="purchase.VendorId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Brand"]: <span class="tx-danger">*</span></label>
+
+                                @(Html.DevExtreme().LookupFor(c=>c.purchase.StoreId)
+            .DataSource(d => d.WebApi()
+                .Controller("Lookups")
+                .LoadAction("StoresLookup")
+                .Key("Value")
+            )
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+            .ShowClearButton(true)
+        )
+                                <span asp-validation-for="purchase.StoreId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <script>
+    function grid_dataSource_beforeSend(op, ajax) {
+        ajax.headers = {
+            RequestVerificationToken: "@Xsrf.GetAndStoreTokens(Model.HttpContext).RequestToken"
+        };
+    }
+</script>
+                            @(Html.DevExtreme().DataGrid<AssetProject.Models.PurchaseAsset>()
+        .DataSource(ds => ds.RemoteController()
+        .LoadUrl(Url.Page("newPurchase", "GridData")) 
+        .UpdateUrl(Url.Page("newPurchase", "GridUpdate")) 
+        .InsertUrl(Url.Page("newPurchase", "GridInsert")) 
+        .DeleteUrl(Url.Page("newPurchase", "GridDelete")) 
+        .Key("PurchaseAssetId")
+        .OnBeforeSend("grid_dataSource_beforeSend") // passes an antiforgery token
+    )
+    
+    .RemoteOperations(true)
+      .Editing(editing =>
+      {
+          editing.Mode(GridEditMode.Batch);
+          editing.AllowUpdating(true);
+          editing.AllowAdding(true);
+          editing.AllowDeleting(true);
+          editing.SelectTextOnEditStart(true);
+          editing.StartEditAction(GridStartEditAction.Click);
+      })
+    .Columns(columns => {
+
+       
+
+        columns.AddFor(m => m.ItemId).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("PurchaseAssets").LoadAction("ItemsLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+
+        columns.AddFor(m => m.Quantity).Caption(sharedResource[""]);
+
+        columns.AddFor(m => m.Price).Caption(sharedResource[""]);
+
+        columns.AddFor(m => m.Total).Caption(sharedResource[""]);
+
+        columns.AddFor(m => m.Discount).Caption(sharedResource[""]);
+
+        columns.AddFor(m => m.Net).Caption(sharedResource[""]);
+
+        columns.AddFor(m => m.Remarks).Caption(sharedResource[""]);
+    })
+
+)
+                        </div>
+   
+                            <div class="col-lg-4 mt-4" >
+                                <div class="form-group">
+                                    <label class="form-control-label"> @sharedResource[""]Total : <span class="tx-danger">*</span></label>
+                                    <input asp-for="@Model.purchase.Total" class="form-control" readonly>
+                                    <span asp-validation-for="@Model.purchase.Total" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mt-4">
+                                <div class="form-group">
+                                    <label class="form-control-label"> @sharedResource[""]Discount : <span class="tx-danger">*</span></label>
+                                    <input asp-for="@Model.purchase.Discount" class="form-control" placeholder="Enter Discount">
+                                    <span asp-validation-for="@Model.purchase.Discount" class="text-danger"></span>
+                                </div>
+                            </div><!-- col-4 -->
+
+
+                            <div class="col-lg-4 mt-4">
+                                <div class="form-group mg-b-10-force">
+                                    <label class="form-control-label">@sharedResource["Net"] : <span class="tx-danger">*</span></label>
+                                    <input asp-for="@Model.purchase.Net" class="form-control" readonly>
+                                    <span asp-validation-for="@Model.purchase.Net" class="text-danger"></span>
+                                </div>
+                            </div><!-- col-4 -->
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="exampleFormControlTextarea1">@sharedResource["Notes"]</label>
+                                    <textarea asp-for="@Model.purchase.Remarks" class="form-control" placeholder="Enter Remarks" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <span asp-validation-for="@Model.purchase.Remarks" class="text-danger"></span>
+                                </div>
+                            </div><!-- col-6 -->
+
+                        </div>
+
+
+                        <div class="form-layout-footer mt-4 ">
+                            <button class="btn btn-primary bd-0">@sharedResource["Submit"]</button>
+                            <a asp-area="admin" class="btn btn-secondary " asp-page="PurchaseList">@sharedResource["Cancel"]</a>
+                        </div><!-- form-layout-footer -->
+</form>
+
+          </div><!-- form-layout -->
+        </div><!-- section-wrapper --> 
+  </div><!-- container -->
+</div>
+
+    
+ @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ <script>
+
+ $(function(){
+    var date = new Date().toISOString().slice(0,10);
+
+//To restrict past date
+
+$('.date').attr('min', date);
+
+
+});
+    </script>
+}

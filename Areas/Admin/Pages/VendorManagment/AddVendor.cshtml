@@ -1,0 +1,96 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.VendorManagment.AddVendorModel
+@{
+}
+
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Assets"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Add Vendor"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Vendor Information"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+            <label class="section-title">@sharedResource["Please fill Vendor information"]</label>
+
+            <div class="form-layout">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Vendor Title"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Vendor.VendorTitle" class="form-control" placeholder="@sharedResource["Enter Vendor Title"]" />
+                                <span asp-validation-for="Vendor.VendorTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Vendor Phone"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Vendor.Phone" class="form-control" placeholder="@sharedResource["Enter Phone Number"]" />
+                                <span asp-validation-for="Vendor.Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Mobile Number"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Vendor.Mobile" class="form-control" placeholder="@sharedResource["Enter Mobile Number"]" />
+                                <span asp-validation-for="Vendor.Mobile" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Vendor WebSite"] : <span class="tx-danger">*</span></label>
+                                <input asp-for="Vendor.Website" type="url" class="form-control" placeholder="@sharedResource["Enter Vendor WebSite"]" />
+                                <span asp-validation-for="Vendor.Website" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Vendor Email"] : <span class="tx-danger">*</span></label>
+                                <input asp-for="Vendor.Email" type="email" class="form-control" placeholder="@sharedResource["Enter Vendor Email"]" />
+                                <span asp-validation-for="Vendor.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Contact Personal Email"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Vendor.ContactPersonEmail" type="email" class="form-control" placeholder="@sharedResource["Enter Personal Email"]" />
+                                <span asp-validation-for="Vendor.ContactPersonEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Contact Personal Name"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Vendor.ContactPersonName" class="form-control" placeholder="@sharedResource["Enter Personal Name"]" />
+                                <span asp-validation-for="Vendor.ContactPersonName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label">@sharedResource["Contact Personal Phone"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Vendor.ContactPersonPhone" class="form-control" placeholder="@sharedResource["Enter Personal Phone"]" />
+                                <span asp-validation-for="Vendor.ContactPersonPhone" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+               
+                      <div class="form-layout-footer">
+                        <button class="btn btn-primary bd-0">@sharedResource["Add Vendor"] </button>
+                        <a asp-area="Admin" asp-page="/VendorManagment/VendorList">
+                            <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Cancel"]' />
+                        </a>
+                    </div><!-- form-layout-footer -->
+                </form>
+            </div>
+        </div>
+    </div><!-- container -->
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

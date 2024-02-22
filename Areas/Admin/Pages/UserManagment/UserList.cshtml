@@ -1,0 +1,66 @@
+﻿@page
+@model AssetProject.Areas.Identity.Pages.UserManagment.UserListModel
+@{
+}
+
+ <div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["SETUP"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["UserManagment"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["UserList"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+            <label class="section-title d-inline">@sharedResource["UserList"]</label>
+        <br/>
+        <br/>
+            <a asp-area="Admin" asp-page="/UserManagment/AddUser" class="btn btn-primary">@sharedResource["AddNewUser"] </a>
+            <p class="mg-b-20 mg-sm-b-40">@sharedResource["Search"].</p>
+            <div class="table-wrapper">
+                <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                   @(Html. DevExtreme().DataGrid<AssetProject.Models.ApplicationUser>()
+        .ID("userlistid")
+    .DataSource(Model.Users,"Id")
+                    .ColumnAutoWidth(true)
+                    .WordWrapEnabled(true)
+                     .ShowBorders(true)
+    .RemoteOperations(true)
+      .ShowBorders(true)
+    .Paging(p=>p.PageSize(10))
+    .Pager(p=>p.ShowPageSizeSelector(true).AllowedPageSizes(new [] {10,20,40,80}))
+    .SearchPanel(s=>s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+    .FilterRow(filterRow => filterRow
+        .Visible(true)
+        .ApplyFilter(GridApplyFilterMode.Auto)
+    )
+      .HeaderFilter(headerFilter => headerFilter.Visible(true))
+    .Columns(columns => {
+
+        columns.AddFor(m => m.FirstName).Caption(@sharedResource["FirstName"]);
+        columns.AddFor(m => m.LastName).Caption(@sharedResource["LastName"]);
+        columns.AddFor(m => m.Email).Caption(@sharedResource["Email"]);
+        columns.AddFor(m => m.PhoneNumber).Caption(@sharedResource["PhoneNumber"]);
+    })
+)
+                
+                </div>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+
+    <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+             if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                 dataGrid = $("#userlistid").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+    </script>

@@ -1,0 +1,156 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="table-wrapper">
+            <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                <label class="section-title d-inline">@sharedResource["Insurances"]</label>
+                <a href="javascript:void(0)" onclick="ShowAssetInsurancePopUp('<%- data.AssetId %>')" class="btn btn-primary" style="float:right">@sharedResource["Link Insurance"]  </a>
+            </div><!-- slim-pageheader -->
+            <br />
+            <br />
+
+            @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetsInsurance>()
+.ID("gridInsuranceContainer")
+.DataSource(ds => ds.Mvc()
+.Controller("AssetsInsurances")
+.LoadAction("Get")
+//.InsertAction("Post")
+.LoadParams(new { AssetId = Model})
+//.UpdateAction("Put")
+.DeleteAction("Delete")
+.Key("AssetsInsuranceId")
+)
+.RemoteOperations(true)
+.ShowBorders(true)
+.Paging(p => p.PageSize(10))
+.Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 40, 80 }))
+.FilterRow(filterRow => filterRow
+    .Visible(true)
+    .ApplyFilter(GridApplyFilterMode.Auto)
+)
+  .HeaderFilter(headerFilter => headerFilter.Visible(true))
+.Columns(columns =>
+{
+    columns.AddFor(m => m.Insurance.Description).Caption(sharedResource["Insurance Description"]);
+    columns.AddFor(m => m.Insurance.InsuranceCompany).Caption(sharedResource["InsuranceCompany"]);
+    columns.AddFor(m => m.Insurance.ContactPerson).Caption(sharedResource["ContactPerson"]);
+    columns.AddFor(m => m.Insurance.StartDate).Caption(sharedResource["StartDate"]);
+    columns.AddFor(m => m.Insurance.EndDate).Caption(sharedResource["EndDate"]);
+    columns.AddFor(m => m.InsuranceId).Caption(sharedResource["Insurance"]).Lookup(lookup => lookup
+        .DataSource(ds => ds.WebApi().Controller("AssetsInsurances").LoadAction("InsurancesLookup").Key("Value"))
+        .ValueExpr("Value")
+        .DisplayExpr("Text")
+
+    );
+
+columns.Add().Width(160).Alignment(HorizontalAlignment.Center)
+.CellTemplate(@<text>
+                            @Html.DevExtreme().Button().Text(sharedResource["Detach"]).OnClick("function (e) { DeattachInsuranceButtonClick(data)}")
+  </text>);
+    })
+    )
+
+        </div>
+        </div>
+    </div>
+            <div class="slim-mainpanel">
+                <div class="container">
+                    <div class="table-wrapper">
+                        <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+                            <div id="AssetInsuranceEditPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+                                    <form asp-area="Admin" asp-page="/AssetManagment/assetprofile" asp-page-handler="AddAssetInsurance" asp-route-AssetId="@Model" enctype="multipart/form-data">
+                                        <div class="modal-content bd-0 tx-14">
+                                            <div class="modal-header pd-y-20 pd-x-25">
+                                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="AssetDescriptiontxt"></h6>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body pd-25">
+                                                @(Html.DevExtreme().Form<AssetProject.Models.AssetsInsurance>()
+.ID("addassetInsurance")
+.ColCount(1)
+.Width(400)
+.Height(100)
+.Items(items =>
+{
+items.AddSimpleFor(m => m.InsuranceId).Label(l => l.Text(sharedResource["Insurance"]))
+                    .IsRequired(true)
+                    .Editor(e => e
+                    .Lookup()
+                    .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("InsurancesLookup").Key("Value"))
+                    .ValueExpr("Value")
+                    .DisplayExpr("Text").Placeholder(sharedResource["Select Insurance"]).Width(250)
+                                        .ShowClearButton(true)
+                                        .ClearButtonText(sharedResource["Clear"])
+                                        .CancelButtonText(sharedResource["Cancel"])
+                                        .SearchPlaceholder(sharedResource["searching"])
+                    );
+items.AddGroup().ColCount(2)
+                   .Items(groupItems =>
+                   {
+                   groupItems.AddButton()
+                                       .HorizontalAlignment(HorizontalAlignment.Center)
+                                       .ButtonOptions(b => b.Text(@sharedResource["Save"])
+                                           .Type(ButtonType.Default)
+                                           .UseSubmitBehavior(true)
+                                   );
+                   groupItems.AddButton()
+                                       .HorizontalAlignment(HorizontalAlignment.Center)
+                                       .ButtonOptions(b => b.Text(sharedResource["Cancel"]).ElementAttr("data-dismiss", "modal")
+
+                );
+
+                       });
+})
+                )
+                                                <br />
+
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div><!-- modal-dialog -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <partial name="_DeattachAssetInsurancePopup" />
+            <script>
+                function changephotoname() {
+                    console.log("in photo")
+                    var fileName = document.getElementById("Photo").value.split("\\").pop();;
+                    document.getElementById("photolabel").innerHTML = fileName;
+
+                }
+                function deleteButtonClickInsurance(data) {
+                    var grid = $('#gridInsuranceContainer').dxDataGrid('instance');
+                    var rowIndex = grid.getRowIndexByKey(data.AssetsInsuranceId)
+                    grid.deleteRow(rowIndex);
+                }
+                function DeattachInsuranceButtonClick(data) {
+
+                    $('#DeattacheAssetInsurancePoup').modal('show');
+                    document.getElementById("AssetInsuranceIdFaild").value = data.AssetsInsuranceId;
+                    document.getElementById("InsuranceIdFaild").value = data.Insurance.Title;
+                    document.getElementById("InsuranceIdFaildHidden").value = data.InsuranceId;
+
+                }
+                  window.addEventListener('DOMContentLoaded', (event) => {
+          if (localStorage.getItem("lang") != "") {
+
+             if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                 dataGrid = $("#gridInsuranceContainer").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+            </script>

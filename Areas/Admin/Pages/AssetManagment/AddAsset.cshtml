@@ -1,0 +1,262 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AssetManagment.AddAssetModel
+@{
+}
+
+
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Asset"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Add Asset"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Asset Information"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+            <label class="section-title">@sharedResource["PLEASE FILL YOUR ASSET INFORMATION"]</label>
+
+            <div class="form-layout">
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row mg-b-25">
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Asset TagId"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.AssetTagId" class="form-control" placeholder="@sharedResource["Enter Asset Tag Id"]">
+                                <span asp-validation-for="Asset.AssetTagId" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["AssetCost"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.AssetCost" class="form-control" placeholder="@sharedResource["Enter Asset Cost"]" value="@(Model.Asset.AssetCost > 0 ? Model.Asset.AssetCost :string.Empty)">
+                                <span asp-validation-for="Asset.AssetCost" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["AssetSerialNo"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.AssetSerialNo" class="form-control" placeholder="@sharedResource["Enter Asset Serial No"]">
+                                <span asp-validation-for="Asset.AssetSerialNo" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["AssetPurchaseDate"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.AssetPurchaseDate" type="date" class="form-control date" placeholder="@sharedResource["Enter Asset Purchase Date"]" value="@(Model.Asset.AssetPurchaseDate >= DateTime.Now ? Model.Asset.AssetPurchaseDate :string.Empty)">
+                                <span asp-validation-for="Asset.AssetPurchaseDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Purchase Number"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.PurchaseNo" class="form-control" placeholder="@sharedResource["Enter Asset Purchase Number"]">
+                                <span asp-validation-for="Asset.PurchaseNo" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Item"]: <span class="tx-danger">*</span></label>
+
+                                @(Html.DevExtreme().LookupFor(c=>c.Asset.ItemId)
+            .DataSource(d => d.WebApi()
+                .Controller("Lookups")
+                .LoadAction("ItemsLookup")
+                .Key("Value")
+            )
+            .ValueExpr("Value")
+            .DisplayExpr("Text").Placeholder(sharedResource["Select Item"])
+            .ShowClearButton(true)
+            .ClearButtonText(sharedResource["Clear"])
+            .CancelButtonText(sharedResource["Cancel"])
+            .SearchPlaceholder(sharedResource["searching"])
+        )
+                                <span asp-validation-for="Asset.ItemId" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Store"] <span class="tx-danger">*</span></label>
+
+                                @(Html.DevExtreme().LookupFor(c=>c.Asset.StoreId)
+            .DataSource(d => d.WebApi()
+                .Controller("Lookups")
+                .LoadAction("StoresLookup")
+                .Key("Value")
+            )
+            .ValueExpr("Value")
+            .DisplayExpr("Text").Placeholder(sharedResource["Select Store"])
+            .ShowClearButton(true)
+            .ClearButtonText(sharedResource["Clear"])
+            .CancelButtonText(sharedResource["Cancel"])
+            .SearchPlaceholder(sharedResource["searching"])
+        )
+                                <span asp-validation-for="Asset.StoreId" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Vendor"]: <span class="tx-danger">*</span></label>
+
+                                @(Html.DevExtreme().LookupFor(c=>c.Asset.VendorId)
+            .DataSource(d => d.WebApi()
+                .Controller("Lookups")
+                .LoadAction("VendorsLookup")
+                .Key("Value")
+            )
+            .ValueExpr("Value")
+            .DisplayExpr("Text").Placeholder(sharedResource["Select Vendor"])
+            .ShowClearButton(true)
+            .ClearButtonText(sharedResource["Clear"])
+            .CancelButtonText(sharedResource["Cancel"])
+            .SearchPlaceholder(sharedResource["searching"])
+        )
+                                <span asp-validation-for="Asset.VendorId" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <hr />
+
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label"> @sharedResource["Photo"]: <span class="tx-danger">*</span></label>
+                                <div class="custom-file">
+                                    <input type="file" name="file" accept=".png, .jpg, .jpeg" class="custom-file-input" id="text" required>
+                                    <label class="custom-file-label" for="File"></label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Description"]: <span class="tx-danger">*</span></label>
+                                <textarea asp-for="Asset.AssetDescription" class="form-control" placeholder="@sharedResource["Enter Asset Description"]"> </textarea>
+                                <span asp-validation-for="Asset.AssetDescription" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <hr />
+                    </div>
+
+                    <div class="row mg-b-25">
+                        <div class="col-lg-4">
+                            <label class="form-control-label">@sharedResource["DepreciableAsset"] </label>
+
+                            <div class="col-md-10" id="radiobtn">
+                                <label for="ch1"> @sharedResource["yes"]</label><input asp-for="Asset.DepreciableAsset" value="true" type="radio" id="ch1" onclick="myFunction()" />
+                                <label for="ch2"> @sharedResource["no"]</label> <input asp-for="Asset.DepreciableAsset" value="false" type="radio" id="ch2" onclick="myFunction()" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="depreciable" class="row mg-b-25" style="display: none;">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["DepreciableCost"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.DepreciableCost" class="form-control required" placeholder="@sharedResource["Enter Depreciable Cost"]" value="@(Model.Asset.DepreciableCost > 0 ? Model.Asset.DepreciableCost :string.Empty)">
+                                <span asp-validation-for="Asset.DepreciableCost" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Salvage Value"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.SalvageValue" class="form-control required" placeholder="@sharedResource["Enter salvage Value"]" value="@(Model.Asset.SalvageValue > 0 ? Model.Asset.SalvageValue :string.Empty)">
+                                <span asp-validation-for="Asset.SalvageValue" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Asset Life (Months)"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.AssetLife" class="form-control required" placeholder="@sharedResource["Enter Asset Life"] " min="1" value="@(Model.Asset.AssetLife > 0 ? Model.Asset.AssetLife :string.Empty)">
+                                <span asp-validation-for="Asset.AssetLife" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Date Acquired"]: <span class="tx-danger">*</span></label>
+                                <input asp-for="Asset.DateAcquired" type="date" class="form-control required" placeholder="@sharedResource["Enter Date Acquired"]" value="@(Model.Asset.DateAcquired >= DateTime.Now ? Model.Asset.DateAcquired :string.Empty)">
+                                <span asp-validation-for="Asset.DateAcquired" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Depreciation Method"]: <span class="tx-danger">*</span></label>
+
+                                @(Html.DevExtreme().LookupFor(c=>c.Asset.DepreciationMethodId)
+                    .DataSource(d => d.WebApi()
+                        .Controller("Lookups")
+                        .LoadAction("DepreciationMethodsLookup")
+                        .Key("Value")
+                    )
+                    .ValueExpr("Value")
+                   .DisplayExpr("Text").Placeholder(sharedResource["Select Depreciation Method"])
+            .ShowClearButton(true)
+            .ClearButtonText(sharedResource["Clear"])
+            .CancelButtonText(sharedResource["Cancel"])
+            .SearchPlaceholder(sharedResource["searching"])
+                )
+                                <span asp-validation-for="Asset.DepreciationMethodId" class="text-danger"></span>
+                            </div>
+                        </div><!-- row -->
+
+
+                    </div>
+                    <div class="form-layout-footer">
+                        <button class="btn btn-primary bd-0">@sharedResource["Create Asset"] </button>
+                        <a asp-area="Admin" asp-page="/AssetManagment/Index">
+                            <input type='button' class="btn btn-secondary bd-0" value='@sharedResource["Cancel"]' />
+                        </a>
+                    </div><!-- form-layout-footer -->
+
+
+                </form>
+
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        // Add the following code if you want the name of the file appear on select
+        $("#text").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+
+
+        function myFunction() {
+            var btn1 = document.getElementById('ch1');
+            var btn2 = document.getElementById('ch2');
+
+            const form = document.getElementById('depreciable');
+
+            if (btn1.checked == true) {
+                // 👇 this SHOWS the form
+                form.style.display = 'flex';
+
+            }
+            else if (btn2.checked == true) {
+                // 👇 this HIDES the form
+                form.style.display = 'none';
+            }
+        }
+
+
+    </script>
+}

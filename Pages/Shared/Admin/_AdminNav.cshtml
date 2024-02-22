@@ -1,0 +1,261 @@
+﻿
+@using AssetProject.Models;
+@using Microsoft.EntityFrameworkCore;
+@using System.Security.Claims;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManger
+@inject AssetContext context;
+@{ 
+    var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var user = await UserManger.FindByIdAsync(userid);
+    var tenant = context.Tenants.Find(user.TenantId);
+    var contractCount = context.Contracts.Where(c => c.TenantId == tenant.TenantId && c.EndDate.Date < DateTime.Now.Date).Count();
+    var AssetsCheckOut = context.Assets.Include(i => i.AssetMovementDetails).ThenInclude(i => i.AssetMovement).Where(c => c.TenantId == tenant.TenantId && c.AssetStatus.AssetStatusId == 2 && c.AssetMovementDetails.OrderByDescending(e => e.AssetMovementDetailsId).FirstOrDefault().AssetMovement.DueDate < DateTime.Now.Date).Count();
+    var InsuranceCount = context.Insurances.Where(c => c.TenantId == tenant.TenantId && c.EndDate.Date < DateTime.Now.Date).Count();
+    var LeasingCount = context.Assets.Include(i => i.AssetLeasingDetails).ThenInclude(i => i.AssetLeasing).Where(c =>c.TenantId == tenant.TenantId && c.AssetStatus.AssetStatusId == 6 && c.AssetLeasingDetails.OrderByDescending(e => e.AssetLeasingDetailsId).FirstOrDefault().AssetLeasing.EndDate.Date < DateTime.Now.Date).Count();
+    var WarrantyCount = context.AssetWarranties.Where(c => c.Asset.TenantId == tenant.TenantId && c.ExpirationDate.Date < DateTime.Now.Date).Count();
+    var MaintenanceCount = context.AssetMaintainances.Include(e => e.Asset).Where(c => c.Asset.TenantId == tenant.TenantId &&c.ScheduleDate.Date == DateTime.Now.Date && c.MaintainanceStatus.MaintainanceStatusId == 1 /*&& c.Asset.AssetStatusId == 9*/).Count();
+    var MaintenanceoverdueCount = context.AssetMaintainances.Include(e => e.Asset).Where(c =>c.Asset.TenantId == tenant.TenantId &&c.ScheduleDate.Date < DateTime.Now.Date && c.MaintainanceStatus.MaintainanceStatusId == 1 /*&& c.Asset.AssetStatusId == 9*/).Count();
+}
+<div class="slim-navbar">
+    <div class="container">
+        <ul class="nav">
+            <li class="nav-item with-sub active">
+                <a class="nav-link" href="#">
+                    <i class="icon ion-ios-home-outline"></i>
+                    <span>@sharedResource["Dashboard"]</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li><a asp-area="Admin" asp-page="/Dashboards/DashboardSummary">@sharedResource["Dashboard - Summary"]</a></li>
+                        @*<li><a asp-area="Admin" asp-page="/Dashboards/DashboardGeo">Dashboard - Geo</a></li>*@
+                        @*  <li><a href="index3.html">Dashboard 03</a></li>
+                            <li><a href="index4.html">Dashboard 04</a></li>
+                            <li><a href="index5.html">Dashboard 05</a></li>*@
+                    </ul>
+                </div><!-- sub-item -->
+            </li>
+            <li class="nav-item with-sub mega-dropdown">
+                <a class="nav-link" href="#">
+                    <i class="icon ion-ios-filing-outline"></i>
+                    <span>@sharedResource["ASSETS"]</span>
+                </a>
+
+                <div class="sub-item">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <label class="section-label">@sharedResource["Asset Management"]</label>
+                            <div class="row">
+                                <div class="col">
+                                    <ul>
+                                        <li><a asp-area="Admin" asp-page="/AssetManagment/Index"> @sharedResource["Asset List"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/AssetManagment/AddAsset">@sharedResource["Add New Asset"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/AssetManagment/GetAssetRepair">@sharedResource["Repaired Assets"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/AssetLostManagement/AddLostList">@sharedResource["Asset Lost"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/Dispose Asset Managment/DisposeAssetList">@sharedResource["Dispose Asset"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/AssetLeasingManagement/leasinglist">@sharedResource["Leasing List"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/SellAssetManagement/SellAssetList">@sharedResource["Sell Asset List"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/AssetBrokenManagement/AssetBrokenList">@sharedResource["Asset Broken List"]</a></li>
+
+                                        <li><a asp-area="Admin" asp-page="/AssetManagment/SearchCheckedOutAssetsByDepartment">@sharedResource["Search CheckedOut Assets By Department"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/AssetManagment/SearchCheckedOutAssetsByEmpolyee">@sharedResource["Search CheckedOut Assets By Employee"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/AssetManagment/SearchCheckedOutAssetsByLocation">@sharedResource["Search CheckedOut Assets By Location"]</a></li>
+                                        <li><a asp-area="Admin" asp-page="/AssetManagment/SearchAsset">@sharedResource["Search Assets"]</a></li>
+
+                                    </ul>
+                                </div><!-- col -->
+
+                            </div><!-- row -->
+                        </div><!-- col -->
+                        <div class="col-lg mg-t-30 mg-lg-t-0">
+                            <label class="section-label">@sharedResource["Patches"]</label>
+                            <ul>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/PatchAddAsset">@sharedResource["Patch Add Asset"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/PatchCheckIn">@sharedResource["Patch CheckIn"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/PatchCheckOut">@sharedResource["Patch CheckOut"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/PatchLease">@sharedResource["Patch Lease"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/PatchMaint">@sharedResource["Patch Maintainance"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/PatchDispose">@sharedResource["Patch Dispose"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/PatchTransferFromDepartment">@sharedResource["Patch Transfer From Department"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/PatchTransferFromEmpolyee">@sharedResource["Patch Transfer From Empolyee"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/PatchProcess/TwoWaysTransfer">@sharedResource["Patch Transfer"]</a></li>
+
+                            </ul>
+                        </div><!-- col -->
+                        <div class="col-lg mg-t-30 mg-lg-t-0">
+                            <label class="section-label">@sharedResource["Contracting"]</label>
+                            <ul>
+                                <li><a asp-area="Admin" asp-page="/ContractManagment/ContractList">@sharedResource["Contract Managment"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/insuranceManagement/insuranceList">@sharedResource["Insurance Managment"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/VendorManagment/VendorList">@sharedResource["Vendor Managment"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/CustomerManagement/CustomerList">@sharedResource["Customer Management"]</a></li>
+
+                            </ul>
+                        </div><!-- col -->
+
+                    </div><!-- row -->
+                </div>
+
+            <li class="nav-item with-sub">
+                <a class="nav-link" href="#">
+                    <i class="icon ion-ios-book-outline"></i>
+                    <span>@sharedResource["Inventory"]</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li><a asp-area="Admin" asp-page="/ItemManagement/ItemList">@sharedResource["Item Managment"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/StoreManagment/List">@sharedResource["Store Managment"]</a></li>
+                        @*     <li class="sub-with-sub">
+                                <a href="#">Pricing</a>
+                                <ul>
+                                    <li><a href="page-pricing.html">Pricing 01</a></li>
+                                    <li><a href="page-pricing2.html">Pricing 02</a></li>
+                                    <li><a href="page-pricing3.html">Pricing 03</a></li>
+                                </ul>
+                            </li>
+                            <li class="sub-with-sub">
+                                <a href="page-signin.html">Sign In</a>
+                                <ul>
+                                    <li><a href="page-signin.html">Signin Simple</a></li>
+                                    <li><a href="page-signin2.html">Signin Split</a></li>
+                                </ul>
+                            </li>
+                            <li class="sub-with-sub">
+                                <a href="page-signup.html">Sign Up</a>
+                                <ul>
+                                    <li><a href="page-signup.html">Signup Simple</a></li>
+                                    <li><a href="page-signup2.html">Signup Split</a></li>
+                                </ul>
+                            </li>
+                            <li class="sub-with-sub">
+                                <a href="#">Error Pages</a>
+                                <ul>
+                                    <li><a href="page-404.html">404 Not Found</a></li>
+                                    <li><a href="page-505.html">505 Forbidden</a></li>
+                                    <li><a href="page-500.html">500 Internal Server</a></li>
+                                    <li><a href="page-503.html">503 Service Unavailable</a></li>
+                                </ul>
+                            </li>*@
+                    </ul>
+                </div><!-- dropdown-menu -->
+            </li>
+            <li class="nav-item with-sub">
+                <a class="nav-link" href="#" data-toggle="dropdown">
+                    <i class="icon ion-ios-gear-outline"></i>
+                    <span>@sharedResource["Reports"]</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li class="sub-with-sub">
+                            <a href="#">@sharedResource["Store Reports"]</a>
+                            <ul>
+
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/StockTaken">@sharedResource["Store Taken Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/StoreIncoming">@sharedResource["Store Incoming Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/StoreOutcoming">@sharedResource["Store Outcoming Report"]</a></li>
+                            </ul>
+                        </li>
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/LocationIncoming">@sharedResource["Location Inventory"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/EmployeeInventory">@sharedResource["Employee Inventory"]</a></li>
+                        <li class="sub-with-sub">
+                            <a href="#">@sharedResource["Transaction Reports"]</a>
+                            <ul>
+
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/PrintAssetCheckOut">@sharedResource["CheckOut Assets Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/AssetCheckIn">@sharedResource["CheckIn Assets Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/AddAssetRPT">@sharedResource["Added Assets Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/AssetEditedReport">@sharedResource["Editd Assets Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/BrockenReport">@sharedResource["Brocken Asset Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/AssetRepairRPT">@sharedResource["Assets Repair Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/AssetLostReport">@sharedResource["Assets Lost Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/SellAssetReport">@sharedResource["Assets Sell Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/DisposeAssetReport">@sharedResource["Assets Dispose Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/Transactions HistoryRPT">@sharedResource["Transactions History Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/MaintainanceReport">@sharedResource["Maintenance Reports"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/MaintOnDay">@sharedResource["Maintenance OnDay Reports"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/LeasingReport">@sharedResource["Leased Asset Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/AssetHistory">@sharedResource["Asset History"]</a></li>
+
+
+                            </ul>
+                        </li>
+
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/InsuranceReport">@sharedResource["Insurances Policy Report"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/ContractReport">@sharedResource["Contracts Report"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/assetreport">@sharedResource["Asset Report"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/AssetStatusReport">@sharedResource["Status Report"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/EmployeeAssets">@sharedResource["Employee Assets"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/LocationAssets">@sharedResource["Location Assets"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/ReportsManagement/DepartmentAssets">@sharedResource["Department Assets"]</a></li>
+
+
+                        <li class="sub-with-sub">
+                            <a href="#">@sharedResource["Other Reports"]</a>
+                            <ul>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/DepartmentRPT">@sharedResource["Departments Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/EmployeeReport">@sharedResource["Employees Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/CustomerReport">@sharedResource["Customers Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/PrintCategory">@sharedResource["Category Report"]</a></li>
+                                <li><a asp-area="Admin" asp-page="/ReportsManagement/WarrantyReport">@sharedResource["Warranty Report"]</a></li>
+
+
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                </div><!-- dropdown-menu -->
+            </li>
+            <li class="nav-item  with-sub">
+                <a class="nav-link" href="page-messages.html">
+                    <i class="icon ion-ios-chatboxes-outline"></i>
+                    <span>@sharedResource["Alerts"]</span>
+                    <span class="square-8"></span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+                        <li><a asp-area="Admin" asp-page="/AlertsManagement/CheckOutExpiring">@sharedResource["Assets Past Due"]<span class="AlertMenuItem">@AssetsCheckOut</span></a></li>
+                        <li><a asp-area="Admin" asp-page="/AlertsManagement/ContractsExpiring">@sharedResource["Contracts Expiring"]<span class="AlertMenuItem">@contractCount</span></a></li>
+                        <li><a asp-area="Admin" asp-page="/AlertsManagement/InsurancesExpiring">@sharedResource["Insurances Expiring"]<span class="AlertMenuItem">@InsuranceCount</span></a></li>
+                        <li><a asp-area="Admin" asp-page="/AlertsManagement/LeasesExpiring">@sharedResource["Leases Expiring"]<span class="AlertMenuItem">@LeasingCount</span></a></li>
+                        <li><a asp-area="Admin" asp-page="/AlertsManagement/MaintenanceDue">@sharedResource["Maintenance Due"]<span class="AlertMenuItem">@MaintenanceCount</span></a></li>
+                        <li><a asp-area="Admin" asp-page="/AlertsManagement/MaintenanceOverdue">@sharedResource["Maintenance Overdue"]<span class="AlertMenuItem">@MaintenanceoverdueCount</span></a></li>
+                        <li><a asp-area="Admin" asp-page="/AlertsManagement/Warranties Expiring">@sharedResource["Warranties Expiring"]<span class="AlertMenuItem">@WarrantyCount</span></a></li>
+                    </ul>
+                </div><!-- dropdown-menu -->
+            </li>
+            @*<li class="nav-item">
+                    <a class="nav-link" href="widgets.html">
+                        <i class="icon ion-ios-analytics-outline"></i>
+                        <span>@sharedResource["Help & Contact"]</span>
+                    </a>
+                </li>*@
+            <li class="nav-item with-sub">
+                <a class="nav-link" href="#" data-toggle="dropdown">
+                    <i class="icon ion-ios-gear-outline"></i>
+                    <span>@sharedResource["SETUP"]</span>
+                </a>
+                <div class="sub-item">
+                    <ul>
+
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Company"))
+                        {
+                            <li><a asp-area="Admin" asp-page="/SetUp/EditCompanyInformation">@sharedResource["Edit Company Information"]</a></li>
+                            <li><a asp-area="Admin" asp-page="/UserManagment/AddUser"> @sharedResource["Add New User"]</a></li>
+                            <li> <a asp-area="Admin" asp-page="/UserManagment/UserList">@sharedResource["User List"] </a></li>
+                        }
+                        <li><a asp-area="Admin" asp-page="/SetUp/CategoryList">@sharedResource["Category List"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/SetUp/DepartmentList">@sharedResource["Department List"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/SetUp/LocationTree">@sharedResource["LocationTree"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/BrandManagment/BrandList">@sharedResource["Brand Managment"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/employeeManagement/employeeList">@sharedResource["Empolyee Managment"]</a></li>
+                        <li><a asp-area="Admin" asp-page="/TechnicianManagement/TechnicianList">@sharedResource["Technician Managment"]</a></li>
+
+
+
+                    </ul>
+                </div><!-- dropdown-menu -->
+            </li>
+        </ul>
+    </div><!-- container -->
+</div><!-- slim-navbar -->

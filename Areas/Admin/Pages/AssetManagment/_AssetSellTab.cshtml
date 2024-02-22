@@ -1,0 +1,70 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container">
+    <div class="table-wrapper">
+        <div id="AssetSellPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+                <form asp-area="Admin" asp-page="/AssetManagment/assetprofile" asp-page-handler="AddAssetsell" asp-route-AssetId="@Model" enctype="multipart/form-data">
+                    <div class="modal-content bd-0 tx-14">
+                        <div class="modal-header pd-y-20 pd-x-25">
+                            <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="AssetDescriptiontxt"></h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <br />
+                        <br />
+
+                        <div class="modal-body">
+                            @(Html.DevExtreme().Form<AssetProject.Models.SellAsset>
+()
+.ID("AddAssetsell")
+.ColCount(1).Width(400).Height(280)
+.Items(items =>
+{
+    items.AddSimpleFor(m => m.SaleDate).IsRequired(true).Label(l=>l.Text(sharedResource["Sale Date"]));
+
+
+
+    items.AddSimpleFor(m => m.SoldTo).IsRequired(true).Label(l => l.Text(sharedResource["Sold To"]));
+    items.AddSimpleFor(m => m.SaleAmount).IsRequired(true).Label(l => l.Text(sharedResource["Sale Amount"])).Editor(e => e.NumberBox().Value(new JS("null")));
+
+})
+
+.Items(items =>
+{
+    items.AddSimpleFor(m => m.Notes).Editor(e=>e.TextArea()).Label(l=>l.Text(sharedResource["Notes"]));
+items.AddGroup().ColCount(2)
+                   .Items(groupItems =>
+                   {
+                   groupItems.AddButton()
+                                       .HorizontalAlignment(HorizontalAlignment.Center)
+                                       .ButtonOptions(b => b.Text(@sharedResource["Save"])
+                                           .Type(ButtonType.Default)
+                                           .UseSubmitBehavior(true)
+                                   );
+                   groupItems.AddButton()
+                                       .HorizontalAlignment(HorizontalAlignment.Center)
+                                       .ButtonOptions(b => b.Text(sharedResource["Cancel"]).ElementAttr("data-dismiss", "modal")
+
+                        @*.UseSubmitBehavior(true)*@
+                );
+
+                       });
+})
+    )
+
+                            <br />
+
+                        </div>
+                        
+                    </div>
+                </form>
+            </div><!-- modal-dialog -->
+        </div>
+    </div>
+</div>

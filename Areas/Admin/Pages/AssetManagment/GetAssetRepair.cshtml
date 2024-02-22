@@ -1,0 +1,91 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.AssetManagment.GetAssetRepairModel
+@{
+}
+
+<div class="slim-mainpanel">
+    <div class="container">
+         <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Asset Managment"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Repaired Assets"] </li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Repaired Assets"]</h6>
+        </div><!-- slim-pageheader -->
+        <div class="section-wrapper">
+ 
+            <div class="table-wrapper">
+                <div id="datatable1_wrapper" class="dataTables_wrapper no-footer">
+
+                    @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetRepairDetails>()
+        .ID("Repairlistid")
+    .DataSource(ds => ds.Mvc()
+        .Controller("AssetRepairs")
+        .LoadAction("Get")
+        .UpdateAction("Put")
+        .DeleteAction("Delete")
+        .Key("AssetRepairDetailsId")
+    )
+    .RemoteOperations(true)
+                    .ShowBorders(true)
+                    .Paging(p=>p.PageSize(10))
+                    .Pager(p=>p.ShowPageSizeSelector(true).AllowedPageSizes(new [] {10,20,40,80}))
+                    .SearchPanel(s=>s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+                    .FilterRow(filterRow => filterRow
+                    .Visible(true)
+                    .ApplyFilter(GridApplyFilterMode.Auto)
+                    )
+                    .HeaderFilter(headerFilter => headerFilter.Visible(true))
+    .Columns(columns => {
+
+ columns.AddFor(m => m.Asset.Photo).Caption(sharedResource["Photo"]).Width(100)
+                    .AllowFiltering(false)
+                    .AllowSorting(false)
+                    .CellTemplate(@<text>
+                <div>
+                    <img src="/<%- value %>" alt="" width="35" height="35" />
+                </div>
+            </text>);
+
+        columns.AddFor(m => m.Asset.AssetTagId).Caption(sharedResource["Asset TagId"]);
+
+        columns.AddFor(m => m.Asset.AssetCost).Caption(sharedResource["AssetCost"]);
+
+        columns.AddFor(m => m.Asset.AssetSerialNo).Caption(sharedResource["AssetSerialNo"]);
+        columns.AddFor(m => m.AssetRepair.ScheduleDate).Caption(sharedResource["Schedule Date"]);
+
+        columns.AddFor(m => m.AssetRepair.CompletedDate).Caption(sharedResource["Completed Date"]);
+
+        columns.AddFor(m => m.AssetRepair.RepairCost).Caption(sharedResource["Repair Cost"]);
+        columns.AddFor(m => m.AssetRepair.TechnicianId).Caption(sharedResource["Technician"]).Lookup(lookup => lookup
+            .DataSource(ds => ds.WebApi().Controller("AssetRepairs").LoadAction("TechniciansLookup").Key("Value"))
+            .ValueExpr("Value")
+            .DisplayExpr("Text")
+        );
+    })
+    @*//.Editing(e => e
+    //    .AllowUpdating(true).Texts(e=>e.EditRow(sharedResource["Edit"]))
+    //    .AllowDeleting(true)
+    //    .Texts(texts => texts.DeleteRow(sharedResource["Delete"]))
+    )*@
+)
+                </div>
+            </div><!-- table-wrapper -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+             if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                 dataGrid = $("#Repairlistid").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+</script>

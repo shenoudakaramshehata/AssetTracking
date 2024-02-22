@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div id="DeletelocationPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+    <form asp-area="Admin" asp-page="/SetUp/LocationTree" asp-page-handler="DeleteLocation" enctype="multipart/form-data">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body pd-25">
+                
+                    <input id="LocationIdField" name="LocationId" hidden  />
+                    
+
+                      <div class="row mg-b-25">
+                <div class="form-group">
+                    <label class="form-control-label">@sharedResource["LocationTitle"] <span class="tx-danger"></span></label>
+                  <input id="LocationTitleField"  class="form-control" readonly>
+                </div>
+              
+            </div><!-- row -->
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">@sharedResource["Confirm"]</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">@sharedResource["Close"]</button>
+            </div>
+        </div>
+    </form>
+</div><!-- modal-dialog -->
+</div>

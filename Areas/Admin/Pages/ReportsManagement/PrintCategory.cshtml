@@ -1,0 +1,74 @@
+﻿@page
+@model AssetProject.Areas.Admin.Pages.ReportsManagement.PrintCategoryModel
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Reports"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["Category Report"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["Category"]</h6>
+        </div><!-- slim-pageheader -->
+
+
+
+        <div class="row row-sm row-timeline">
+            <div class="col-lg-3  mg-lg-t-0">
+                <div class="card pd-20 mg-t-20">
+                    <label class="slim-card-title">@sharedResource["Filter"]</label>
+                    <div class="post-group">
+
+                        @using (Html.BeginForm(FormMethod.Post))
+                            @(Html.DevExtreme().Form<AssetProject.ReportModels.FilterModel>()
+                                .FormData(Model.filterModel)
+                                .LabelMode(FormLabelMode.Outside)
+            .LabelLocation(FormLabelLocation.Top)
+    .Items(items => {
+        items.AddSimpleFor(m => m.ShowAll).IsRequired(false).Label(m => m.Text(sharedResource["Show All"]));
+        items.AddSimpleFor(m => m.CategoryId).IsRequired(false).Label(l=>l.Text(sharedResource["Category"]))
+        .Editor(e => e
+        .Lookup()
+        .DataSource(ds => ds.WebApi().Controller("Lookups").LoadAction("CategoriesLookup").Key("Value"))
+        .ValueExpr("Value")
+        .DisplayExpr("Text").Placeholder(sharedResource["Select Category"])
+                                        .ShowClearButton(true)
+                                        .ClearButtonText(sharedResource["Clear"])
+                                        .CancelButtonText(sharedResource["Cancel"])
+                                        .SearchPlaceholder(sharedResource["searching"])
+        );
+        items.AddButton()
+       .HorizontalAlignment(HorizontalAlignment.Left)
+       .ButtonOptions(b => b.Text(sharedResource["Send"])
+       .Type(ButtonType.Success)
+       .UseSubmitBehavior(true)
+       );
+    })
+)
+                    </div><!-- post-group -->
+                </div><!-- card -->
+            </div>
+            <div class="col-lg-9">
+
+                <div class="card pd-30">
+                    <div class="timeline-group">
+                        @using AssetProject.Reports
+
+                        <link rel="stylesheet" href="~/css/viewer.part.bundle.css" />
+
+                        <script src="~/js/viewer.part.bundle.js"></script>
+
+                        @Html.DevExpress().WebDocumentViewer("DocumentViewer").Height("1000px").Bind(Model.Report)
+                    </div><!-- timeline-group -->
+                </div><!-- card -->
+
+            </div><!-- col-9 -->
+            <!-- col-3 -->
+        </div><!-- row -->
+
+
+
+    </div><!-- container -->
+</div>

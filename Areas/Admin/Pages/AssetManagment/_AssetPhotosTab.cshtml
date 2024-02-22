@@ -1,0 +1,143 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model int
+@inject AssetContext Context;
+    
+
+ <a href="javascript:void(0)" onclick="ShowAddAssetPhotoPopUp()" class="btn btn-primary" style="float:right">@sharedResource["Add New Photo"] </a>
+ <p id="Deletephotot"></p>
+<div id="AssetPhotoPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document">
+        <form asp-area="Admin" asp-page="/AssetManagment/AssetProfile" asp-page-handler="AddAssetPhotot" asp-route-AssetId="@Model" enctype="multipart/form-data">
+        <div class="modal-content bd-0 tx-14">
+            <div class="modal-header pd-y-20 pd-x-25">
+                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold" id="AssetDescriptiontxt"></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="@sharedResource["Close"]">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body pd-25">
+                @(Html.DevExtreme().Form<AssetProject.Models.AssetPhotos>()
+                .ID("AssetPhotoFrm")
+                .ColCount(1)
+                .Items(items => {
+                    items.AddSimpleFor(m => m.PhotoUrl).ValidationRules(r => r
+         .AddRequired()
+       .Message("Photo is required"))
+      .Label(k => k.Text(sharedResource["Photo"])).Template(@<text>
+                     <div class="form-group">
+                              <div class="custom-file">
+                                  <input type="file"  name="file" accept=".png, .jpg, .jpeg" class="custom-file-input" onchange="changephotoname()" id="Photo" required>
+                                  <label class="custom-file-label" for="File" id="photolabel"></label>
+                              </div>
+                          </div>
+                                </text> );
+                items.AddSimpleFor(m => m.Remarks).Label(l=>l.Text(sharedResource["Remarks"]));
+
+                 items.AddGroup().ColCount(2)
+               .Items(groupItems => {
+               groupItems.AddButton()
+                .HorizontalAlignment(HorizontalAlignment.Center)
+                .ButtonOptions(b => b.Text(@sharedResource["Save"])
+                    .Type(ButtonType.Default)
+                    .UseSubmitBehavior(true)
+            );
+               groupItems.AddButton()
+                .HorizontalAlignment(HorizontalAlignment.Center)
+                .ButtonOptions(b => b.Text(sharedResource["Cancel"]).ElementAttr("data-dismiss","modal")
+                );
+
+                });
+                })
+                )
+            </div>
+        </div>
+        </form>
+    </div><!-- modal-dialog -->
+</div>
+
+
+    @{
+        int count = 1;
+        var AssetPhotos = Context.AssetPhotos.Where(a => a.AssetId == Model).ToList();
+    }
+<br />
+<br />
+<br/>
+<div class="product-center Productcontainer">
+    @foreach (var item in AssetPhotos)
+    {
+
+        var AssetPhoto = "/" + item.PhotoUrl;
+        @*<div class="product">
+            <div id="divimage" class="product-header">
+
+                <div class="photo-galery-with-zoom" data-scale="1.6">
+                    <label>
+                        <input type="checkbox" name="galery" onclick="event.stopPropagation();" />
+                        <img src="@AssetPhoto" />
+                    </label>
+                </div>
+            </div>
+        </div>*@
+
+
+
+
+        <div class="product">
+                <div id="divimage" class="product-header">
+
+                    <img id="@item.AssetPhotoId"  src="@AssetPhoto" />
+                    <ul class="icons">
+                        <li>
+                            <a href="javascript:void(0)" onclick="DeletePhoto(@item.AssetId,@item.AssetPhotoId)">
+                                <i class="fa fa-trash"></i>
+                            </a>
+
+                        </li>
+                        @*<li class="">
+
+                            <i class="fa fa-search-plus" onclick="ZoomImage(@item.AssetPhotoId)" aria-hidden="true"></i>
+                        </li>*@
+                    </ul>
+                </div>
+            </div>
+    }
+</div>
+
+
+
+            <script>
+
+
+                $('#divimage').click(
+                    function () {
+                        $(this).animate({ 'zoom': 1.2 }, 400);
+                    },
+                    function () {
+                        $(this).animate({ 'zoom': 1 }, 400);
+                    });
+
+
+
+
+                function ZoomImage(Id) {
+                    console.log(Id)
+                    var image = document.getElementById(Id);
+
+                    $(Id).animate({ 'zoom': 1.2 }, 400);
+
+                }
+                function changephotoname() {
+                    console.log("in photo")
+                    var fileName = document.getElementById("Photo").value.split("\\").pop();
+                    document.getElementById("photolabel").innerHTML = fileName;
+
+                }
+
+
+
+            </script>

@@ -1,0 +1,204 @@
+﻿@page "{id:int?}"
+@model AssetProject.Areas.Admin.Pages.InsuranceManagement.DetailsInsuranceModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">@sharedResource["Home"]</a></li>
+                <li class="breadcrumb-item"><a href="#">@sharedResource["ASSETS"]</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@sharedResource["InsuranceDetails"]</li>
+            </ol>
+            <h6 class="slim-pagetitle">@sharedResource["InsurancePolicyInformation"]</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+            <div class="form-layout">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row mg-b-20">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["InsuranceTitle"]: <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.insurance.Title</h4></label>
+                            </div>
+
+                        </div>
+                    </div><!-- col-4 -->
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label"> @sharedResource["Description"] : <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.insurance.Description</h4></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label"> @sharedResource["InsuranceCompany"] : <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.insurance.InsuranceCompany</h4></label>
+                            </div>
+                        </div>
+                    </div><!-- col-4 -->
+                </div><!--End Row-->
+                <div class="row mg-b-20">
+                    <div class="col-lg-4">
+                        <div class="form-group mg-b-10-force">
+                            <label class="form-control-label">@sharedResource["ContactPerson"] : <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.insurance.ContactPerson</h4></label>
+                            </div>
+                        </div>
+                    </div><!-- col-4 -->
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["Phone"]  : <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.insurance.Phone</h4></label>
+                            </div>
+                        </div>
+                    </div><!-- col-4 -->
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["PolicyNumber"]: <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.insurance.PolicyNo</h4></label>
+                            </div>
+                        </div>
+                    </div><!-- col-4 -->
+                </div><!--End Row-->
+                <div class="row mg-b-20">
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["StartDate"] : <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.StartDate</h4></label>
+                            </div>
+                        </div>
+                    </div><!-- col-6 -->
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["EndDate"] : <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.EndDate</h4></label>
+                            </div>
+                        </div>
+                    </div><!-- col-6 -->
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["Deductible"] : <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.insurance.Deductible</h4></label>
+                            </div>
+                        </div>
+                    </div><!-- col-6 -->
+                </div><!--End Row-->
+                <div class="row mg-b-20">
+
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label">@sharedResource["Permium"] : <span class="tx-danger">*</span></label>
+                            <div>
+                                <label><h4>@Model.insurance.Permium</h4></label>
+                            </div>
+                        </div>
+                    </div><!-- col-6 -->
+                    <div class="col-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label"> @sharedResource["IsActive"]  : <span class="tx-danger">*</span></label>
+                            <input asp-for="@Model.insurance.IsActive" class="form-control">
+                            <span asp-validation-for="@Model.insurance.IsActive" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div><!-- End row -->
+               
+                <label class="section-title d-inline mb-4 mt-4">@sharedResource["ASSETS"]</label>
+
+                <script>
+    function grid_dataSource_beforeSend(op, ajax) {
+        ajax.headers = {
+            RequestVerificationToken: "@Xsrf.GetAndStoreTokens(Model.HttpContext).RequestToken"
+        };
+    }
+                </script>
+
+
+                @(Html.DevExtreme().DataGrid<AssetProject.Models.AssetsInsurance>()
+.ID("insurancedetailsid")
+.DataSource(ds => ds.RemoteController()
+.LoadUrl(Url.Page("DetailsInsurance", "GridData"))
+.LoadParams(new { InsuranceId = Model.insurance.InsuranceId })
+)
+.RemoteOperations(true)
+.ShowBorders(true)
+.Paging(p => p.PageSize(10))
+.Pager(p => p.ShowPageSizeSelector(true).AllowedPageSizes(new[] { 10, 20, 40, 80 }))
+.SearchPanel(s => s.Visible(true).HighlightCaseSensitive(true).Placeholder(sharedResource["searching"]))
+.FilterRow(filterRow => filterRow
+.Visible(true)
+.ApplyFilter(GridApplyFilterMode.Auto)
+)
+.HeaderFilter(headerFilter => headerFilter.Visible(true)).
+Columns(columns =>
+{
+
+columns.AddFor(m => m.Asset.Photo).Caption(sharedResource["Photo"]).Width(100)
+.AllowFiltering(false)
+.AllowSorting(false)
+.CellTemplate(@<text>
+                <div>
+                    <img src="/<%- value %>" alt="" width="35" height="35" />
+                </div>
+            </text>);
+        columns.AddFor(m => m.Asset.AssetTagId).Caption(sharedResource["Asset TagId"]);
+                    columns.AddFor(m => m.Asset.AssetCost).Caption(sharedResource["Cost"]);
+        columns.AddFor(m => m.Asset.AssetSerialNo).Caption(sharedResource["Serial"]);
+        columns.AddFor(m => m.Asset.AssetPurchaseDate).Caption(sharedResource["Purchase Date"]);
+
+
+        columns.AddFor(m => m.Asset.ItemId).Caption(sharedResource["Item"]).Lookup(lookup => lookup
+        .DataSource(ds => ds.WebApi().Controller("Assets").LoadAction("ItemsLookup").Key("Value"))
+        .ValueExpr("Value")
+        .DisplayExpr("Text")
+        );
+
+
+
+        //columns.AddFor(m => m.ContractId).Lookup(lookup => lookup
+        //    .DataSource(ds => ds.WebApi().Controller("AssetContracts").LoadAction("ContractsLookup").Key("Value"))
+        //    .ValueExpr("Value")
+        //    .DisplayExpr("Text")
+        //);
+    })
+
+                        )
+
+                <div class="form-layout-footer mt-4 ">
+                    <a asp-area="admin" class="btn btn-secondary " asp-page="InsuranceList">@sharedResource["BacktoList"]</a>
+                </div><!-- form-layout-footer -->
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+       
+
+    </div><!-- container -->
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        if (localStorage.getItem("lang") != "") {
+
+            if (localStorage.getItem("lang") == "ar") {
+                console.log("In Page")
+                dataGrid = $("#insurancedetailsid").dxDataGrid("instance");
+                dataGrid.option("rtlEnabled", true);
+            }
+        }
+    });
+</script>

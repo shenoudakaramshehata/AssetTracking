@@ -1,0 +1,264 @@
+﻿@using AssetProject.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+}
+
+
+<div class="slim-header">
+    <div class="container">
+        <div class="slim-header-left">
+            <h2 class="slim-logo"><a asp-area="Admin" asp-page="index">Slim<span> Assets.</span></a></h2>
+
+
+            <form class="form-inline" asp-area="Admin" asp-page="/AssetManagment/SearchAsset" method="post" id="SearchFrm">
+                <div class="search-box">
+                    <input type="text" required class="form-control" id="SearchAssetInput" placeholder="@sharedResource["searching"]" name="AssetSearchItem">
+                    <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+
+                </div>
+                <!-- search-box -->
+            </form>
+            <script>
+
+
+                  $('#SearchAssetInput').keypress(function (e) {
+                    if (e.which == 13 ) {
+                     $('form#SearchFrm').submit();
+                     return false;
+                        }
+                });
+
+            </script>
+
+            @*<partial name="_LoginPartial" />*@
+        </div><!-- slim-header-left -->
+        <div class="slim-header-right">
+            <div class="dropdown dropdown-c" style="margin: 25px;">
+                <a href="#" class="logged-user" data-toggle="dropdown">
+                    <span>@sharedResource["Choose Language"]</span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+
+                    <nav class="nav">
+                        
+                        <a onclick="ChangeLang('en')" id="ang1" asp-controller="Setting" asp-action="ChangeLanguage" asp-route-culture="en-US" asp-route-url="@Context.Request.Path@Context.Request.QueryString.ToString()" class="nav-link"><img src="/Admin/img/flags/us_flag.jpg" alt="user-image" height="12">&nbsp; English</a>
+
+                        <a onclick="ChangeLang('ar')" id="ang2" asp-controller="Setting" asp-action="ChangeLanguage" asp-route-culture="ar-EG" asp-route-url="@Context.Request.Path@Context.Request.QueryString.ToString()" class="nav-link"> <img width="18" height="18" src="/Admin/img/flags/ar-eg.png" alt="user-image">&nbsp; اللغة العربية</a>
+
+                    </nav>
+
+
+                </div>
+                <script>
+                    function ChangeLang(lang){
+                        document.getElementById("hello");
+                       var anch1= document.getElementById("ang1");
+                       var anch2= document.getElementById("ang2");
+                       var masterPage= document.getElementById("masterPageId"); 
+                       if(lang=="en"){
+                       localStorage.setItem("lang", "en");
+                          
+                       }
+                       if(lang=="ar")
+                       {
+                          
+                          localStorage.setItem("lang", "ar");
+
+                       }
+
+                    }
+                    window.addEventListener('DOMContentLoaded', (event) => {
+                        var masterPage = document.getElementById("masterPageId");
+                        if (localStorage.getItem("lang") != "") {
+                            if (localStorage.getItem("lang") == "en") {
+                                masterPage.dir = "ltr";
+                            console.log("Aya")
+                            document.getElementById("masterbodyid").style.textAlign = "left"
+                        }
+
+                        else if (localStorage.getItem("lang") == "ar") {
+
+
+                            masterPage.dir = "rtl"
+                            console.log("Aya M")
+
+                                document.getElementById("masterbodyid").style.textAlign = "right"
+                               
+
+                        }
+                    }
+                     });
+                </script>
+                @*<div class="dropdown-menu dropdown-menu-end">
+            <div class="dropdown-menu-header">
+                Choose Language
+
+            </div>
+            <div class="dropdown-activity-list">
+
+                <a asp-controller="Setting" asp-action="ChangeLanguage" asp-route-culture="en-US" asp-route-url="@Context.Request.Path@Context.Request.QueryString.ToString()" class="dropdown-item notify-item">
+                    <img src="/Admin/img/flags/us_flag.jpg" alt="user-image" height="12"> <span class="align-middle"> English </span>
+                </a>
+
+                <a asp-controller="Setting" asp-action="ChangeLanguage" asp-route-culture="ar-EG" asp-route-url="@Context.Request.Path@Context.Request.QueryString.ToString()" class="dropdown-item notify-item">
+                    <img width="18" height="18" src="/Admin/img/flags/ar-eg.png" alt="user-image"> <span class="align-middle"> اللغة العربية  </span>
+
+                </a>
+            </div>
+        </div>*@
+            </div>
+                @*<div class="dropdown dropdown-a">
+                    <a href="#" class="header-notification" data-toggle="dropdown">
+                        <i class="icon ion-ios-bolt-outline"></i>
+                    </a>
+
+                    <div class="dropdown-menu">
+                        <div class="dropdown-menu-header">
+                            <h6 class="dropdown-menu-title">Activity Logs</h6>
+                            <div>
+                                <a href="#">Filter List</a>
+                                <a href="#">Settings</a>
+                            </div>
+                        </div><!-- dropdown-menu-header -->
+                        <div class="dropdown-activity-list">
+                            <div class="activity-label">Today, December 13, 2017</div>
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">10:15am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-success"></span></div>
+                                    <div class="col-8">Purchased christmas sale cloud storage</div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">9:48am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-danger"></span></div>
+                                    <div class="col-8">Login failure</div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">7:29am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-warning"></span></div>
+                                    <div class="col-8">(D:) Storage almost full</div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">3:21am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-success"></span></div>
+                                    <div class="col-8">1 item sold <strong>Christmas bundle</strong></div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                            <div class="activity-label">Yesterday, December 12, 2017</div>
+                            <div class="activity-item">
+                                <div class="row no-gutters">
+                                    <div class="col-2 tx-right">6:57am</div>
+                                    <div class="col-2 tx-center"><span class="square-10 bg-success"></span></div>
+                                    <div class="col-8">Earn new badge <strong>Elite Author</strong></div>
+                                </div><!-- row -->
+                            </div><!-- activity-item -->
+                        </div><!-- dropdown-activity-list -->
+                        <div class="dropdown-list-footer">
+                            <a href="page-activity.html"><i class="fa fa-angle-down"></i> Show All Activities</a>
+                        </div>
+                    </div><!-- dropdown-menu-right -->
+                </div><!-- dropdown -->
+                <div class="dropdown dropdown-b">
+                    <a href="#" class="header-notification" data-toggle="dropdown">
+                        <i class="icon ion-ios-bell-outline"></i>
+                        <span class="indicator"></span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-menu-header">
+                            <h6 class="dropdown-menu-title">Notifications</h6>
+                            <div>
+                                <a href="#">Mark All as Read</a>
+                                <a href="#">Settings</a>
+                            </div>
+                        </div><!-- dropdown-menu-header -->
+                        <div class="dropdown-list">
+                            <!-- loop starts here -->
+                            <a href="#" class="dropdown-link">
+                                <div class="media">
+                                    <img src="~/Admin/img/img8.jpg" alt="">
+                                    <div class="media-body">
+                                        <p><strong>Suzzeth Bungaos</strong> tagged you and 18 others in a post.</p>
+                                        <span>October 03, 2017 8:45am</span>
+                                    </div>
+                                </div><!-- media -->
+                            </a>
+                            <!-- loop ends here -->
+                            <a href="#" class="dropdown-link">
+                                <div class="media">
+                                    <img src="~/Admin/img/img9.jpg" alt="">
+                                    <div class="media-body">
+                                        <p><strong>Mellisa Brown</strong> appreciated your work <strong>The Social Network</strong></p>
+                                        <span>October 02, 2017 12:44am</span>
+                                    </div>
+                                </div><!-- media -->
+                            </a>
+                            <a href="#" class="dropdown-link read">
+                                <div class="media">
+                                    <img src="~/Admin/img/img10.jpg" alt="">
+                                    <div class="media-body">
+                                        <p>20+ new items added are for sale in your <strong>Sale Group</strong></p>
+                                        <span>October 01, 2017 10:20pm</span>
+                                    </div>
+                                </div><!-- media -->
+                            </a>
+                            <a href="#" class="dropdown-link read">
+                                <div class="media">
+                                    <img src="~/Admin/img/img2.jpg" alt="">
+                                    <div class="media-body">
+                                        <p><strong>Julius Erving</strong> wants to connect with you on your conversation with <strong>Ronnie Mara</strong></p>
+                                        <span>October 01, 2017 6:08pm</span>
+                                    </div>
+                                </div><!-- media -->
+                            </a>
+                            <div class="dropdown-list-footer">
+                                <a href="page-notifications.html"><i class="fa fa-angle-down"></i> Show All Notifications</a>
+                            </div>
+                        </div><!-- dropdown-list -->
+                    </div><!-- dropdown-menu-right -->
+                </div><!-- dropdown -->*@
+                <div class="dropdown dropdown-c">
+
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        var user = await UserManager.GetUserAsync(User);
+                        string userImage = user.Pic != null ? user.Pic : "/Images/UserPict/defaultUser.png";
+                        <a href="#" class="logged-user" data-toggle="dropdown">
+                            <img src="@userImage" alt="">
+                            <span>@User.Identity.Name</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                    }
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <nav class="nav">
+                            @*<a href="page-profile.html" class="nav-link"><i class="icon ion-person"></i> View Profile</a>
+                            <a href="page-edit-profile.html" class="nav-link"><i class="icon ion-compose"></i> Edit Profile</a>
+                            <a href="page-activity.html" class="nav-link"><i class="icon ion-ios-bolt"></i> Activity Log</a>*@
+                            <a asp-area="Identity" asp-page="/Account/ChangePassword" class="nav-link"><i class="icon ion-ios-bolt"></i> @sharedResource["Change Password"]</a>
+                            @*<a href="page-settings.html" class="nav-link"><i class="icon ion-ios-gear"></i> Account Settings</a>*@
+
+                            <form id="form1" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                <a href="#" class="nav-link" onclick="document.getElementById('form1').submit();"><i class="icon ion-forward"></i> @sharedResource["Sign Out"]</a>
+                            </form>
+                        </nav>
+
+
+                    </div><!-- dropdown-menu -->
+
+                </div><!-- dropdown -->
+
+            </div><!-- header-right -->
+    </div><!-- container -->
+</div><!-- slim-header -->

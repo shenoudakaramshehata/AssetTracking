@@ -1,0 +1,95 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model AssetProject.Models.AssetRepair
+
+<div id="AssetRepairPoup" class="modal fade effect-super-scaled" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-vertical-center modal-lg" role="document" style="width:50%">
+        <form asp-area="Admin" asp-page="/AssetManagment/AssetProfile" asp-page-handler="AddAssetRepair" enctype="multipart/form-data">
+            <div class="modal-content bd-0 tx-14">
+                <div class="modal-header pd-y-20 pd-x-25">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">@sharedResource["Asset Repair"]</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-25">
+                    <div class="row mg-b-25">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Schedule Date"] <span class="tx-danger">*</span></label>
+                                <input asp-for="@Model.ScheduleDate" type="date" class="form-control date" value=" ">
+                                <span asp-validation-for="@Model.ScheduleDate" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Assigned To"]: <span class="tx-danger">*</span></label>
+                                @(Html.DevExtreme().LookupFor(c=>c.TechnicianId)
+                                        .DataSource(d => d.WebApi()
+                                        .Controller("Lookups")
+                                        .LoadAction("TechniciansLookup")
+                                        .Key("Value")
+                                        )
+                                        .ValueExpr("Value")
+                                        .DisplayExpr("Text").Placeholder(sharedResource["Select Technician"])
+                                        .ShowClearButton(true)
+                                        .ClearButtonText(sharedResource["Clear"])
+                                        .CancelButtonText(sharedResource["Cancel"])
+                                        .SearchPlaceholder(sharedResource["searching"])
+                                )
+                                <span asp-validation-for="@Model.TechnicianId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Completed Date"] <span class="tx-danger">*</span></label>
+                                <input asp-for="@Model.CompletedDate" type="date" class="form-control date" value=" ">
+                                <span asp-validation-for="@Model.CompletedDate" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Repair Cost"] <span class="tx-danger">*</span></label>
+                                <input asp-for="@Model.RepairCost" class="form-control" placeholder="">
+                                <span asp-validation-for="@Model.RepairCost" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="form-control-label">@sharedResource["Notes"] <span class="tx-danger">*</span></label>
+                                <textarea asp-for="@Model.Notes" class="form-control" placeholder=""></textarea>
+                                <span asp-validation-for="@Model.Notes" class="text-danger"></span>
+                            </div>
+                        </div><!-- col-4 -->
+
+
+                        <input name="AssetId" hidden id="RepairAssetIdField" />
+                    </div><!-- row -->
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">@sharedResource["Add Asset Repair"]</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@sharedResource["Cancel"]</button>
+                </div>
+            </div>
+        </form>
+    </div><!-- modal-dialog -->
+</div>
+<script>
+    $(function () {
+        var date = new Date().toISOString().slice(0, 10);
+
+        //To restrict past date
+
+        $('.date').attr('min', date);
+
+
+    });
+</script>
